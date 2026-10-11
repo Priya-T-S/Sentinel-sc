@@ -1,0 +1,265 @@
+{
+  "generated_at": "2026-10-11T19:29:10+00:00",
+  "source": "live OSV scan of demo/demo-app",
+  "vulnerabilities": [
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-3g43-6gmg-66jw"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-3p68-rc4w-qgx5"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-43fc-jf86-j433"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-5c9x-8gcm-mpgx"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-62hf-57xw-28j9"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-6chq-wfr3-2hj9"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-7q8q-rj6j-mhjq"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-898c-q2cr-xwhg"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-cph5-m8f7-6c5x"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-fvcv-3m26-pcqx"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-hfxv-24rg-xrqf"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-j5f8-grm9-p9fc"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-jr5f-v2jv-69x6"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-m7pr-hjqh-92cm"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-mmx7-hfxf-jppx"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-p92q-9vqr-4j8v"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-pf86-5x62-jrwf"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-pjwm-pj3p-43mv"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-pmwg-cvhr-8vh7"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-vf2m-468p-8v99"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-w9j2-pvgh-6h63"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-wf5p-g6vw-rhxx"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-xhjh-pmcv-23jw"
+    },
+    {
+      "package": "axios",
+      "version": "0.21.1",
+      "advisory": "GHSA-xx6v-rp6x-q39c"
+    },
+    {
+      "package": "body-parser",
+      "version": "1.19.0",
+      "advisory": "GHSA-qwcr-r2fm-qrc7"
+    },
+    {
+      "package": "body-parser",
+      "version": "1.19.0",
+      "advisory": "GHSA-v422-hmwv-36x6"
+    },
+    {
+      "package": "cookie",
+      "version": "0.4.0",
+      "advisory": "GHSA-pxg6-pf52-xh8x"
+    },
+    {
+      "package": "express",
+      "version": "4.17.1",
+      "advisory": "GHSA-qw6h-vgh9-j6wx"
+    },
+    {
+      "package": "express",
+      "version": "4.17.1",
+      "advisory": "GHSA-rv95-896h-c2vc"
+    },
+    {
+      "package": "jinja2",
+      "version": "3.1.4",
+      "advisory": "GHSA-cpwx-vrp4-4pq7"
+    },
+    {
+      "package": "jinja2",
+      "version": "3.1.4",
+      "advisory": "GHSA-gmj6-6f8f-6699"
+    },
+    {
+      "package": "jinja2",
+      "version": "3.1.4",
+      "advisory": "GHSA-q2x7-8rv6-6q7h"
+    },
+    {
+      "package": "lodash",
+      "version": "4.17.15",
+      "advisory": "GHSA-29mw-wpgm-hmr9"
+    },
+    {
+      "package": "lodash",
+      "version": "4.17.15",
+      "advisory": "GHSA-35jh-r3h4-6jhm"
+    },
+    {
+      "package": "lodash",
+      "version": "4.17.15",
+      "advisory": "GHSA-f23m-r3pf-42rh"
+    },
+    {
+      "package": "lodash",
+      "version": "4.17.15",
+      "advisory": "GHSA-p6mc-m468-83gw"
+    },
+    {
+      "package": "minimist",
+      "version": "1.2.5",
+      "advisory": "GHSA-xvch-5gv4-984h"
+    },
+    {
+      "package": "path-to-regexp",
+      "version": "0.1.7",
+      "advisory": "GHSA-37ch-88jc-xwx2"
+    },
+    {
+      "package": "path-to-regexp",
+      "version": "0.1.7",
+      "advisory": "GHSA-rhx6-c78j-4q9w"
+    },
+    {
+      "package": "pyyaml",
+      "version": "5.3.1",
+      "advisory": "GHSA-8q59-q68h-6hv4"
+    },
+    {
+      "package": "qs",
+      "version": "6.7.0",
+      "advisory": "GHSA-4mjr-xmp4-gh2g"
+    },
+    {
+      "package": "qs",
+      "version": "6.7.0",
+      "advisory": "GHSA-6rw7-vpxm-498p"
+    },
+    {
+      "package": "qs",
+      "version": "6.7.0",
+      "advisory": "GHSA-hrpp-h998-j3pp"
+    },
+    {
+      "package": "qs",
+      "version": "6.7.0",
+      "advisory": "GHSA-w7fw-mjwx-w883"
+    },
+    {
+      "package": "requests",
+      "version": "2.25.1",
+      "advisory": "GHSA-9hjg-9r4m-mvj7"
+    },
+    {
+      "package": "requests",
+      "version": "2.25.1",
+      "advisory": "GHSA-9wx4-h78v-vm56"
+    },
+    {
+      "package": "requests",
+      "version": "2.25.1",
+      "advisory": "GHSA-gc5v-m9x4-r6x2"
+    },
+    {
+      "package": "requests",
+      "version": "2.25.1",
+      "advisory": "GHSA-j8r2-6x86-q33q"
+    },
+    {
+      "package": "send",
+      "version": "0.17.1",
+      "advisory": "GHSA-m6fv-jmcg-4jfg"
+    },
+    {
+      "package": "serve-static",
+      "version": "1.14.1",
+      "advisory": "GHSA-cm22-4g7w-348p"
+    }
+  ],
+  "must_be_clean": [
+    "dayjs"
+  ],
+  "must_flag_signals": [
+    "typosquat:lodahs",
+    "install_script:lodahs",
+    "source_patterns:lodahs",
+    "ci_pwn_request"
+  ]
+}

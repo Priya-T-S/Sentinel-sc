@@ -1,0 +1,532 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
+<title>SENTINEL-SC report — demo-app</title>
+<style>body{font:14px/1.5 system-ui,Segoe UI,sans-serif;background:#0b0f17;color:#dbe2ee;margin:0;padding:24px}h1,h2,h3{color:#fff}
+table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border-bottom:1px solid #222b3a;padding:6px 8px;text-align:left;vertical-align:top}
+th{color:#8b98ad;font-weight:600}.sev{padding:2px 8px;border-radius:10px;color:#111;font-weight:700;font-size:12px}.muted{color:#8b98ad;font-size:12px}
+.mono{font-family:ui-monospace,Consolas,monospace}.small{font-size:12px}.card{background:#121826;border:1px solid #222b3a;border-radius:8px;padding:12px 16px;margin:12px 0}
+pre{background:#070a10;padding:10px;overflow:auto;border-radius:6px}a{color:#6cb6ff}.kpi{display:inline-block;margin-right:24px}.kpi b{font-size:22px;display:block;color:#fff}</style></head><body>
+<h1>SENTINEL-SC supply-chain report</h1>
+<p class="muted">Source: demo-app · Scan cli · 2026-10-11T19:54:58+00:00 · Status: partial · Engine 1.0.0</p>
+<div class="card"><span class="kpi"><b>60</b>packages (10 direct)</span><span class="kpi"><b>50</b>vulnerabilities in 13 packages</span>
+<span class="kpi"><b>2/20/23/5</b>crit/high/med/low</span>
+<span class="kpi"><b>10</b>suspicious signals</span><span class="kpi"><b>1</b>not verified</span>
+<span class="kpi"><b>FAIL</b>policy gate</span></div>
+<h2>Verified vulnerabilities</h2><table><tr><th>Severity</th><th>Advisory</th><th>Package</th><th>Summary</th><th>Path</th><th>Reachability</th><th>Priority</th><th>Fix</th></tr><tr><td><span class="sev" style="background:#ff4d6d">critical</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-8q59-q68h-6hv4" rel="noopener noreferrer">GHSA-8q59-q68h-6hv4</a><div class="muted">CVE-2020-14343</div></td>
+<td><b>pyyaml</b>@5.3.1<div class="muted">direct · runtime</div></td>
+<td>Improper Input Validation in PyYAML<div class="muted">Affected: &gt;= 0, &lt; 5.4</div></td>
+<td class="mono small">services/report-worker → pyyaml@5.3.1</td><td>Static call-site evidence</td>
+<td>P1 (100.0)</td>
+<td>5.4<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-35jh-r3h4-6jhm" rel="noopener noreferrer">GHSA-35jh-r3h4-6jhm</a><div class="muted">CVE-2021-23337, CVE-2026-4800</div></td>
+<td><b>lodash</b>@4.17.15<div class="muted">direct · runtime</div></td>
+<td>Command Injection in lodash<div class="muted">Affected: &gt;= 0, &lt; 4.17.21; &gt;= 4.0.0, &lt; 4.18.0</div></td>
+<td class="mono small">acme-orders-api → lodash@4.17.15</td><td>Static call-site evidence</td>
+<td>P1 (84.1)</td>
+<td>4.18.1<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-pjwm-pj3p-43mv" rel="noopener noreferrer">GHSA-pjwm-pj3p-43mv</a><div class="muted">CVE-2026-44492</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>axios&#x27;s shouldBypassProxy does not recognize IPv4-mapped IPv6 addresses, allowing NO_PROXY bypass (incomplete fix for CVE-2025-62718)<div class="muted">Affected: &gt;= 1.15.0, &lt; 1.16.0; &gt;= 0, &lt; 0.32.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P1 (83.2)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-jr5f-v2jv-69x6" rel="noopener noreferrer">GHSA-jr5f-v2jv-69x6</a><div class="muted">CVE-2025-27152</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.8.2; &gt;= 0, &lt; 0.30.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P1 (78.1)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-p92q-9vqr-4j8v" rel="noopener noreferrer">GHSA-p92q-9vqr-4j8v</a><div class="muted">CVE-2026-44487</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Proxy-Authorization Credential Leak to Origin Server Across HTTP-to-HTTPS Redirect in Axios Node.js HTTP Adapter<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.16.0; &gt;= 0, &lt; 0.32.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P1 (78.1)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-cph5-m8f7-6c5x" rel="noopener noreferrer">GHSA-cph5-m8f7-6c5x</a><div class="muted">CVE-2021-3749</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>axios Inefficient Regular Expression Complexity vulnerability<div class="muted">Affected: &gt;= 0, &lt; 0.21.2</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (74.6)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-43fc-jf86-j433" rel="noopener noreferrer">GHSA-43fc-jf86-j433</a><div class="muted">CVE-2026-25639</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.13.5; &gt;= 0, &lt; 0.30.3</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (73.9)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-62hf-57xw-28j9" rel="noopener noreferrer">GHSA-62hf-57xw-28j9</a><div class="muted">CVE-2026-42039</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: unbounded recursion in toFormData causes DoS via deeply nested request data<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (73.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-hfxv-24rg-xrqf" rel="noopener noreferrer">GHSA-hfxv-24rg-xrqf</a><div class="muted">CVE-2026-44496</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Regular Expression Denial of Service (ReDoS) via Cookie Name Injection<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.16.0; &gt;= 0, &lt; 0.32.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (73.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-j5f8-grm9-p9fc" rel="noopener noreferrer">GHSA-j5f8-grm9-p9fc</a><div class="muted">CVE-2026-44486</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Proxy-Authorization header leaks to redirect target when proxy is re-evaluated to direct connection<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.16.0; &gt;= 0, &lt; 0.32.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (73.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-p6mc-m468-83gw" rel="noopener noreferrer">GHSA-p6mc-m468-83gw</a><div class="muted">CVE-2020-8203</div></td>
+<td><b>lodash</b>@4.17.15<div class="muted">direct · runtime</div></td>
+<td>Prototype Pollution in lodash<div class="muted">Affected: &gt;= 3.7.0, &lt; 4.17.19</div></td>
+<td class="mono small">acme-orders-api → lodash@4.17.15</td><td>Imported by application</td>
+<td>P2 (73.4)</td>
+<td>4.18.1<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-pf86-5x62-jrwf" rel="noopener noreferrer">GHSA-pf86-5x62-jrwf</a><div class="muted">CVE-2026-42033</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Prototype Pollution Gadgets - Response Tampering, Data Exfiltration, and Request Hijacking<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (73.0)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-6chq-wfr3-2hj9" rel="noopener noreferrer">GHSA-6chq-wfr3-2hj9</a><div class="muted">CVE-2026-42035</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Header Injection via Prototype Pollution<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (72.9)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-pmwg-cvhr-8vh7" rel="noopener noreferrer">GHSA-pmwg-cvhr-8vh7</a><div class="muted">CVE-2026-42043</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Incomplete Fix for CVE-2025-62718 — NO_PROXY Protection Bypassed via RFC 1122 Loopback Subnet (127.0.0.0/8) in Axios 1.15.0<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (71.3)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-3g43-6gmg-66jw" rel="noopener noreferrer">GHSA-3g43-6gmg-66jw</a><div class="muted">CVE-2026-44495</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>axios Vulnerable to Credential Theft and Response Hijacking via Prototype Pollution Gadget in Config Merge<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.2; &gt;= 0.19.0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (69.6)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-m7pr-hjqh-92cm" rel="noopener noreferrer">GHSA-m7pr-hjqh-92cm</a><div class="muted">CVE-2026-42038</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: no_proxy bypass via IP alias allows SSRF<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (67.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-f23m-r3pf-42rh" rel="noopener noreferrer">GHSA-f23m-r3pf-42rh</a><div class="muted">CVE-2025-13465, CVE-2026-2950</div></td>
+<td><b>lodash</b>@4.17.15<div class="muted">direct · runtime</div></td>
+<td>lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`<div class="muted">Affected: &gt;= 0, &lt; 4.18.0; &gt;= 4.0.0, &lt; 4.17.23</div></td>
+<td class="mono small">acme-orders-api → lodash@4.17.15</td><td>Imported by application</td>
+<td>P2 (65.4)</td>
+<td>4.18.1<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-wf5p-g6vw-rhxx" rel="noopener noreferrer">GHSA-wf5p-g6vw-rhxx</a><div class="muted">CVE-2023-45857</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios Cross-Site Request Forgery Vulnerability<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.6.0; &gt;= 0.8.1, &lt; 0.28.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (65.3)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-hrpp-h998-j3pp" rel="noopener noreferrer">GHSA-hrpp-h998-j3pp</a><div class="muted">CVE-2022-24999</div></td>
+<td><b>qs</b>@6.7.0<div class="muted">transitive · runtime</div></td>
+<td>qs vulnerable to Prototype Pollution<div class="muted">Affected: &gt;= 6.10.0, &lt; 6.10.3; &gt;= 6.9.0, &lt; 6.9.7</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → qs@6.7.0</td><td>Reached via imported dependency</td>
+<td>P2 (64.1)</td>
+<td>6.16.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-qwcr-r2fm-qrc7" rel="noopener noreferrer">GHSA-qwcr-r2fm-qrc7</a><div class="muted">CVE-2024-45590</div></td>
+<td><b>body-parser</b>@1.19.0<div class="muted">transitive · runtime</div></td>
+<td>body-parser vulnerable to denial of service when url encoding is enabled<div class="muted">Affected: &gt;= 0, &lt; 1.20.3</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → body-parser@1.19.0</td><td>Reached via imported dependency</td>
+<td>P2 (62.6)</td>
+<td>1.20.6<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-37ch-88jc-xwx2" rel="noopener noreferrer">GHSA-37ch-88jc-xwx2</a><div class="muted">CVE-2024-45296, CVE-2026-4867</div></td>
+<td><b>path-to-regexp</b>@0.1.7<div class="muted">transitive · runtime</div></td>
+<td>path-to-regexp vulnerable to Regular Expression Denial of Service via multiple route parameters<div class="muted">Affected: &gt;= 0, &lt; 0.1.13; &gt;= 0.2.0, &lt; 1.9.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → path-to-regexp@0.1.7</td><td>Reached via imported dependency</td>
+<td>P2 (62.6)</td>
+<td>0.1.13<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-rhx6-c78j-4q9w" rel="noopener noreferrer">GHSA-rhx6-c78j-4q9w</a><div class="muted">CVE-2024-52798</div></td>
+<td><b>path-to-regexp</b>@0.1.7<div class="muted">transitive · runtime</div></td>
+<td>path-to-regexp contains a ReDoS<div class="muted">Affected: &gt;= 0, &lt; 0.1.12</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → path-to-regexp@0.1.7</td><td>Reached via imported dependency</td>
+<td>P2 (62.6)</td>
+<td>0.1.13<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-j8r2-6x86-q33q" rel="noopener noreferrer">GHSA-j8r2-6x86-q33q</a><div class="muted">CVE-2023-32681</div></td>
+<td><b>requests</b>@2.25.1<div class="muted">direct · runtime</div></td>
+<td>Unintended leak of Proxy-Authorization header in requests<div class="muted">Affected: &gt;= 2.3.0, &lt; 2.31.0</div></td>
+<td class="mono small">services/report-worker → requests@2.25.1</td><td>Imported by application</td>
+<td>P2 (62.1)</td>
+<td>2.33.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-rv95-896h-c2vc" rel="noopener noreferrer">GHSA-rv95-896h-c2vc</a><div class="muted">CVE-2024-29041</div></td>
+<td><b>express</b>@4.17.1<div class="muted">direct · runtime</div></td>
+<td>Express.js Open Redirect in malformed URLs<div class="muted">Affected: &gt;= 0, &lt; 4.19.2; &gt;= 5.0.0-alpha.1, &lt; 5.0.0-beta.3</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1</td><td>Imported by application</td>
+<td>P2 (61.9)</td>
+<td>4.20.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-9wx4-h78v-vm56" rel="noopener noreferrer">GHSA-9wx4-h78v-vm56</a><div class="muted">CVE-2024-35195</div></td>
+<td><b>requests</b>@2.25.1<div class="muted">direct · runtime</div></td>
+<td>Requests `Session` object does not verify requests after making first request with verify=False<div class="muted">Affected: &gt;= 0, &lt; 2.32.0</div></td>
+<td class="mono small">services/report-worker → requests@2.25.1</td><td>Imported by application</td>
+<td>P2 (57.6)</td>
+<td>2.33.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-7q8q-rj6j-mhjq" rel="noopener noreferrer">GHSA-7q8q-rj6j-mhjq</a><div class="muted">CVE-2026-67319</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Nested axios option objects can consume polluted prototype values<div class="muted">Affected: &gt;= 0.8.0, &lt; 0.33.0; &gt;= 1.0.0, &lt; 1.18.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (56.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-mmx7-hfxf-jppx" rel="noopener noreferrer">GHSA-mmx7-hfxf-jppx</a><div class="muted">CVE-2026-67316</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Prototype pollution gadgets can alter axios request construction<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.18.0; &gt;= 0, &lt; 0.33.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (56.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-xx6v-rp6x-q39c" rel="noopener noreferrer">GHSA-xx6v-rp6x-q39c</a><div class="muted">CVE-2026-42042</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: XSRF Token Cross-Origin Leakage via Prototype Pollution Gadget in `withXSRFToken` Boolean Coercion<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (55.9)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-29mw-wpgm-hmr9" rel="noopener noreferrer">GHSA-29mw-wpgm-hmr9</a><div class="muted">CVE-2020-28500</div></td>
+<td><b>lodash</b>@4.17.15<div class="muted">direct · runtime</div></td>
+<td>Regular Expression Denial of Service (ReDoS) in lodash<div class="muted">Affected: &gt;= 4.0.0, &lt; 4.17.21</div></td>
+<td class="mono small">acme-orders-api → lodash@4.17.15</td><td>Imported by application</td>
+<td>P2 (55.8)</td>
+<td>4.18.1<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-5c9x-8gcm-mpgx" rel="noopener noreferrer">GHSA-5c9x-8gcm-mpgx</a><div class="muted">CVE-2026-42034</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios&#x27; HTTP adapter-streamed uploads bypass maxBodyLength when maxRedirects: 0<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (55.1)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-vf2m-468p-8v99" rel="noopener noreferrer">GHSA-vf2m-468p-8v99</a><div class="muted">CVE-2026-42036</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: HTTP adapter streamed responses bypass maxContentLength<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P2 (55.1)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-9hjg-9r4m-mvj7" rel="noopener noreferrer">GHSA-9hjg-9r4m-mvj7</a><div class="muted">CVE-2024-47081</div></td>
+<td><b>requests</b>@2.25.1<div class="muted">direct · runtime</div></td>
+<td>Requests vulnerable to .netrc credentials leak via malicious URLs<div class="muted">Affected: &gt;= 0, &lt; 2.32.4</div></td>
+<td class="mono small">services/report-worker → requests@2.25.1</td><td>Imported by application</td>
+<td>P2 (55.1)</td>
+<td>2.33.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-qw6h-vgh9-j6wx" rel="noopener noreferrer">GHSA-qw6h-vgh9-j6wx</a><div class="muted">CVE-2024-43796</div></td>
+<td><b>express</b>@4.17.1<div class="muted">direct · runtime</div></td>
+<td>express vulnerable to XSS via response.redirect()<div class="muted">Affected: &gt;= 0, &lt; 4.20.0; &gt;= 5.0.0-alpha.1, &lt; 5.0.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1</td><td>Imported by application</td>
+<td>P3 (52.5)</td>
+<td>4.20.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-3p68-rc4w-qgx5" rel="noopener noreferrer">GHSA-3p68-rc4w-qgx5</a><div class="muted">CVE-2025-62718</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.0; &gt;= 0, &lt; 0.31.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P3 (50.9)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-fvcv-3m26-pcqx" rel="noopener noreferrer">GHSA-fvcv-3m26-pcqx</a><div class="muted">CVE-2026-40175</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios has Unrestricted Cloud Metadata Exfiltration via Header Injection Chain<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.0; &gt;= 0, &lt; 0.31.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P3 (50.9)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-w9j2-pvgh-6h63" rel="noopener noreferrer">GHSA-w9j2-pvgh-6h63</a><div class="muted">CVE-2026-42041</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P3 (50.9)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-898c-q2cr-xwhg" rel="noopener noreferrer">GHSA-898c-q2cr-xwhg</a><div class="muted">CVE-2026-44490</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>axios has DoS &amp; Header Injection via Prototype Pollution Read-Side Gadgets in axios merge functions<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.16.0; &gt;= 0, &lt; 0.32.0</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P3 (50.8)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-gc5v-m9x4-r6x2" rel="noopener noreferrer">GHSA-gc5v-m9x4-r6x2</a><div class="muted">CVE-2026-25645</div></td>
+<td><b>requests</b>@2.25.1<div class="muted">direct · runtime</div></td>
+<td>Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function<div class="muted">Affected: &gt;= 0, &lt; 2.33.0</div></td>
+<td class="mono small">services/report-worker → requests@2.25.1</td><td>Imported by application</td>
+<td>P3 (47.4)</td>
+<td>2.33.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-4mjr-xmp4-gh2g" rel="noopener noreferrer">GHSA-4mjr-xmp4-gh2g</a><div class="muted">CVE-2026-82417</div></td>
+<td><b>qs</b>@6.7.0<div class="muted">transitive · runtime</div></td>
+<td>qs: Denial of Service via Attacker Controlled isBuffer<div class="muted">Affected: &gt;= 2.2.5, &lt; 6.16.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → qs@6.7.0</td><td>Reached via imported dependency</td>
+<td>P3 (47.1)</td>
+<td>6.16.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-gmj6-6f8f-6699" rel="noopener noreferrer">GHSA-gmj6-6f8f-6699</a><div class="muted">CVE-2024-56201</div></td>
+<td><b>jinja2</b>@3.1.4<div class="muted">direct · runtime</div></td>
+<td>Jinja has a sandbox breakout through malicious filenames<div class="muted">Affected: &gt;= 3.0.0, &lt; 3.1.5</div></td>
+<td class="mono small">services/report-worker → jinja2@3.1.4</td><td>Declared, no import found</td>
+<td>P3 (45.2)</td>
+<td>3.1.6<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-m6fv-jmcg-4jfg" rel="noopener noreferrer">GHSA-m6fv-jmcg-4jfg</a><div class="muted">CVE-2024-43799</div></td>
+<td><b>send</b>@0.17.1<div class="muted">transitive · runtime</div></td>
+<td>send vulnerable to template injection that can lead to XSS<div class="muted">Affected: &gt;= 0, &lt; 0.19.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → send@0.17.1</td><td>Reached via imported dependency</td>
+<td>P3 (45.1)</td>
+<td>0.19.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-cm22-4g7w-348p" rel="noopener noreferrer">GHSA-cm22-4g7w-348p</a><div class="muted">CVE-2024-43800</div></td>
+<td><b>serve-static</b>@1.14.1<div class="muted">transitive · runtime</div></td>
+<td>serve-static vulnerable to template injection that can lead to XSS<div class="muted">Affected: &gt;= 0, &lt; 1.16.0; &gt;= 2.0.0, &lt; 2.1.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → serve-static@1.14.1</td><td>Reached via imported dependency</td>
+<td>P3 (45.1)</td>
+<td>1.16.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-xhjh-pmcv-23jw" rel="noopener noreferrer">GHSA-xhjh-pmcv-23jw</a><div class="muted">CVE-2026-42040</div></td>
+<td><b>axios</b>@0.21.1<div class="muted">direct · runtime</div></td>
+<td>Axios: Null Byte Injection via Reverse-Encoding in AxiosURLSearchParams<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.15.1; &gt;= 0, &lt; 0.31.1</div></td>
+<td class="mono small">acme-orders-api → axios@0.21.1</td><td>Imported by application</td>
+<td>P3 (41.5)</td>
+<td>0.34.0<div class="muted">requires_review · verified</div></td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-q2x7-8rv6-6q7h" rel="noopener noreferrer">GHSA-q2x7-8rv6-6q7h</a><div class="muted">CVE-2024-56326</div></td>
+<td><b>jinja2</b>@3.1.4<div class="muted">direct · runtime</div></td>
+<td>Jinja has a sandbox breakout through indirect reference to format method<div class="muted">Affected: &gt;= 0, &lt; 3.1.5</div></td>
+<td class="mono small">services/report-worker → jinja2@3.1.4</td><td>Declared, no import found</td>
+<td>P3 (41.3)</td>
+<td>3.1.6<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-w7fw-mjwx-w883" rel="noopener noreferrer">GHSA-w7fw-mjwx-w883</a><div class="muted">CVE-2026-2391</div></td>
+<td><b>qs</b>@6.7.0<div class="muted">transitive · runtime</div></td>
+<td>qs&#x27;s arrayLimit bypass in comma parsing allows denial of service<div class="muted">Affected: &gt;= 6.7.0, &lt; 6.14.2</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → qs@6.7.0</td><td>Reached via imported dependency</td>
+<td>P3 (36.0)</td>
+<td>6.16.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-v422-hmwv-36x6" rel="noopener noreferrer">GHSA-v422-hmwv-36x6</a><div class="muted">CVE-2026-12590</div></td>
+<td><b>body-parser</b>@1.19.0<div class="muted">transitive · runtime</div></td>
+<td>body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement<div class="muted">Affected: &gt;= 0, &lt; 1.20.6; &gt;= 2.0.0, &lt; 2.3.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → body-parser@1.19.0</td><td>Reached via imported dependency</td>
+<td>P3 (35.9)</td>
+<td>1.20.6<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-6rw7-vpxm-498p" rel="noopener noreferrer">GHSA-6rw7-vpxm-498p</a><div class="muted">CVE-2025-15284</div></td>
+<td><b>qs</b>@6.7.0<div class="muted">transitive · runtime</div></td>
+<td>qs&#x27;s arrayLimit bypass in its bracket notation allows DoS via memory exhaustion<div class="muted">Affected: &gt;= 0, &lt; 6.14.1</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → qs@6.7.0</td><td>Reached via imported dependency</td>
+<td>P3 (35.9)</td>
+<td>6.16.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-cpwx-vrp4-4pq7" rel="noopener noreferrer">GHSA-cpwx-vrp4-4pq7</a><div class="muted">CVE-2025-27516</div></td>
+<td><b>jinja2</b>@3.1.4<div class="muted">direct · runtime</div></td>
+<td>Jinja2 vulnerable to sandbox breakout through attr filter selecting format method<div class="muted">Affected: &gt;= 0, &lt; 3.1.6</div></td>
+<td class="mono small">services/report-worker → jinja2@3.1.4</td><td>Declared, no import found</td>
+<td>P3 (32.1)</td>
+<td>3.1.6<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-pxg6-pf52-xh8x" rel="noopener noreferrer">GHSA-pxg6-pf52-xh8x</a><div class="muted">CVE-2024-47764</div></td>
+<td><b>cookie</b>@0.4.0<div class="muted">transitive · runtime</div></td>
+<td>cookie accepts cookie name, path, and domain with out of bounds characters<div class="muted">Affected: &gt;= 0, &lt; 0.7.0</div></td>
+<td class="mono small">acme-orders-api → express@4.17.1 → cookie@0.4.0</td><td>Reached via imported dependency</td>
+<td>P4 (27.6)</td>
+<td>0.7.0<div class="muted">safe_candidate · verified</div></td></tr><tr><td><span class="sev" style="background:#ff4d6d">critical</span></td>
+<td><a href="https://osv.dev/vulnerability/GHSA-xvch-5gv4-984h" rel="noopener noreferrer">GHSA-xvch-5gv4-984h</a><div class="muted">CVE-2021-44906</div></td>
+<td><b>minimist</b>@1.2.5<div class="muted">direct · dev</div></td>
+<td>Prototype Pollution in minimist<div class="muted">Affected: &gt;= 1.0.0, &lt; 1.2.6; &gt;= 0, &lt; 0.2.4</div></td>
+<td class="mono small">acme-orders-api → minimist@1.2.5</td><td>Declared, no import found</td>
+<td>P4 (24.2)</td>
+<td>1.2.6<div class="muted">safe_candidate · verified</div></td></tr></table>
+<h2>Supply-chain, integrity and hygiene signals</h2><p class="muted">Heuristic signals are evidence for review, not confirmed compromise.</p>
+<table><tr><th>Severity</th><th>Kind</th><th>Signal</th><th>Subject</th><th>Observation</th><th>Confidence</th></tr><tr><td><span class="sev" style="background:#ff4d6d">critical</span></td>
+<td>ci</td><td>pull_request_target checks out untrusted PR code</td><td>.github/workflows/ci.yml</td><td>.github/workflows/ci.yml job &#x27;test&#x27; runs on pull_request_target and checks out ref &#x27;${{ github.event.pull_request.head.sha }}&#x27;.</td><td>high</td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td>ci</td><td>Untrusted event data interpolated into a shell script</td><td>.github/workflows/ci.yml</td><td>.github/workflows/ci.yml job &#x27;test&#x27; step 3 interpolates ${{ github.event.pull_request.title }} directly into `run:`.</td><td>high</td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td>suspicious</td><td>Name resembles popular package &#x27;lodash&#x27;</td><td>lodahs</td><td>&#x27;lodahs&#x27; is similar to &#x27;lodash&#x27; (edit distance 1). Corroborating evidence: declared directly by the application; runs install-time scripts; not installed from the public registry (file).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#ff8c42">high</span></td>
+<td>suspicious</td><td>Risky code patterns in package source (4 type(s))</td><td>lodahs</td><td>lodahs source contains: Dynamic code execution (eval / new Function); Environment variable access; Network access; Runtime decoding of embedded data.</td><td>medium</td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td>suspicious</td><td>Runs code at install time</td><td>mime</td><td>mime@1.6.0 declares install lifecycle scripts (prepare: node src/build.js).</td><td>high</td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td>suspicious</td><td>Runs code at install time</td><td>lodahs</td><td>lodahs@1.0.0 declares install lifecycle scripts (lockfile flag hasInstallScript=true).</td><td>high</td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td>ci</td><td>Workflow grants broad write permissions</td><td>.github/workflows/ci.yml</td><td>.github/workflows/ci.yml sets permissions: write-all.</td><td>high</td></tr><tr><td><span class="sev" style="background:#f5c542">medium</span></td>
+<td>ci</td><td>Action not pinned to a commit: some-org/setup-node-cache@v2</td><td>.github/workflows/ci.yml</td><td>.github/workflows/ci.yml job &#x27;test&#x27; uses some-org/setup-node-cache@v2 (mutable tag/branch &#x27;v2&#x27;).</td><td>high</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>integrity</td><td>Dependency installed from a local path</td><td>lodahs</td><td>lodahs resolves to a local directory (vendor/lodahs).</td><td>high</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>hygiene</td><td>Unpinned dependency: flask</td><td>services/report-worker/requirements.txt</td><td>services/report-worker/requirements.txt: flask &#x27;&gt;=2.0&#x27; - not pinned to an exact version.</td><td>high</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>ci</td><td>Action not pinned to a commit: actions/checkout@v4</td><td>.github/workflows/ci.yml</td><td>.github/workflows/ci.yml job &#x27;test&#x27; uses actions/checkout@v4 (mutable tag/branch &#x27;v4&#x27;).</td><td>high</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>accepts</td><td>Latest release of accepts was 2.1 years ago (2024-08-31).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>array-flatten</td><td>Latest release of array-flatten was 6.9 years ago (2019-11-21).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>bytes</td><td>Latest release of bytes was 4.7 years ago (2022-01-28).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>depd</td><td>Latest release of depd was 8.0 years ago (2018-10-26).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>destroy</td><td>Latest release of destroy was 4.6 years ago (2022-03-20).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>suspicious</td><td>Publisher changed for this version</td><td>destroy</td><td>destroy@1.0.4 was published by &#x27;dougwilson&#x27;; the previous version by &#x27;jongleberry&#x27;.</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>ee-first</td><td>Latest release of ee-first was 11.4 years ago (2015-05-25).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>encodeurl</td><td>Latest release of encodeurl was 2.5 years ago (2024-03-29).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>escape-html</td><td>Latest release of escape-html was 11.1 years ago (2015-09-01).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>etag</td><td>Latest release of etag was 9.1 years ago (2017-09-13).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>suspicious</td><td>Unusual burst of releases</td><td>express</td><td>30 versions of express were published within 24 hours (around 2013-08-28).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>forwarded</td><td>Latest release of forwarded was 5.4 years ago (2021-05-31).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>fresh</td><td>Latest release of fresh was 2.1 years ago (2024-09-04).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>inherits</td><td>Latest release of inherits was 7.3 years ago (2019-06-19).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>merge-descriptors</td><td>Latest release of merge-descriptors was 2.9 years ago (2023-11-16).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>methods</td><td>Latest release of methods was 10.7 years ago (2016-01-18).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>on-finished</td><td>Latest release of on-finished was 4.6 years ago (2022-02-22).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>parseurl</td><td>Latest release of parseurl was 7.5 years ago (2019-04-16).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>suspicious</td><td>Publisher changed for this version</td><td>proxy-addr</td><td>proxy-addr@2.0.8 was published by &#x27;GitHub Actions&#x27;; the previous version by &#x27;dougwilson&#x27;.</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>suspicious</td><td>Unusual burst of releases</td><td>qs</td><td>28 versions of qs were published within 24 hours (around 2026-02-13).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>safe-buffer</td><td>Latest release of safe-buffer was 6.4 years ago (2020-05-10).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>safer-buffer</td><td>Latest release of safer-buffer was 8.5 years ago (2018-04-08).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>setprototypeof</td><td>Latest release of setprototypeof was 7.2 years ago (2019-07-18).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>toidentifier</td><td>Latest release of toidentifier was 4.9 years ago (2021-11-14).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>suspicious</td><td>Publisher changed for this version</td><td>toidentifier</td><td>toidentifier@1.0.0 was published by &#x27;dougwilson&#x27;; the previous version by &#x27;niftylettuce&#x27;.</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>unpipe</td><td>Latest release of unpipe was 11.3 years ago (2015-06-14).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>utils-merge</td><td>Latest release of utils-merge was 9.1 years ago (2017-09-20).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>vary</td><td>Latest release of vary was 9.1 years ago (2017-09-24).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>secret</td><td>AWS access key ID in README.md</td><td>README.md</td><td>README.md:16 contains what looks like a aws access key id: AKIA************LE (20 chars) (matches a documented example/placeholder value)</td><td>low</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>secret</td><td>AWS access key ID in default.json</td><td>config/default.json</td><td>config/default.json:3 contains what looks like a aws access key id: AKIA************LE (20 chars) (matches a documented example/placeholder value)</td><td>low</td></tr><tr><td><span class="sev" style="background:#5cc8ff">low</span></td>
+<td>maintenance</td><td>No releases in over 2 years</td><td>minimist</td><td>Latest release of minimist was 3.6 years ago (2023-02-25).</td><td>medium</td></tr><tr><td><span class="sev" style="background:#9aa4b2">info</span></td>
+<td>suspicious</td><td>Name resembles popular package &#x27;safe-buffer&#x27;</td><td>safer-buffer</td><td>&#x27;safer-buffer&#x27; is similar to &#x27;safe-buffer&#x27; (edit distance 1). However, &#x27;safer-buffer&#x27; has been published for 8.6 years with 6 versions, which suggests an established, distinct package.</td><td>low</td></tr></table>
+<h2>Remediation plan</h2><div class="card"><h3>minimist 1.2.5 → 1.2.6</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade minimist 1.2.5 -&gt; 1.2.6</b>: <code>npm install minimist@1.2.6</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;1.2.5&#x27; does not admit 1.2.6; the manifest must change.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -16,5 +16,5 @@
+   },
+   &quot;devDependencies&quot;: {
+-    &quot;minimist&quot;: &quot;1.2.5&quot;
++    &quot;minimist&quot;: &quot;1.2.6&quot;
+   }
+ }
+</pre></div><div class="card"><h3>pyyaml 5.3.1 → 5.4</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade pyyaml 5.3.1 -&gt; 5.4</b>: <code>pip install &#x27;pyyaml==5.4&#x27;</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;==5.3.1&#x27; does not admit 5.4; the manifest must change.</li></ul>
+<pre>--- a/services/report-worker/requirements.txt
++++ b/services/report-worker/requirements.txt
+@@ -1,5 +1,5 @@
+ # report-worker (Python) — SENTINEL-SC demo. Intentionally vulnerable pins. DO NOT DEPLOY.
+ requests==2.25.1
+-PyYAML==5.3.1
++PyYAML==5.4
+ Jinja2==3.1.4
+ flask&gt;=2.0
+</pre></div><div class="card"><h3>axios 0.21.1 → 0.34.0</h3>
+<p>State: <b>requires_review</b> · Fix confidence: <b>verified</b> · Major change: True</p>
+<ul><li><b>Upgrade axios 0.21.1 -&gt; 0.34.0</b>: <code>npm install axios@0.34.0</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;0.21.1&#x27; does not admit 0.34.0; the manifest must change.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -11,5 +11,5 @@
+     &quot;express&quot;: &quot;4.17.1&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+-    &quot;axios&quot;: &quot;0.21.1&quot;,
++    &quot;axios&quot;: &quot;0.34.0&quot;,
+     &quot;dayjs&quot;: &quot;^1.11.10&quot;,
+     &quot;lodahs&quot;: &quot;file:./vendor/lodahs&quot;
+</pre></div><div class="card"><h3>body-parser 1.19.0 → 1.20.6</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade express to 4.22.0</b>: <code>npm install express@4.22.0</code> — Smallest express release whose dependency chain resolves body-parser to 1.20.8 (registry metadata).</li></ul>
+<ul><li>parent express@4.17.1: excludes fix — express requires body-parser@&#x27;1.19.0&#x27;, which excludes 1.20.6.</li><li>upgrade express 4.17.1 -&gt; 4.22.0: resolves fix — Registry dependency ranges along 1 path(s), e.g. express@4.22.0 -&gt; body-parser@1.20.8 (range &#x27;~1.20.3&#x27;): resolves body-parser to 1.20.8.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.22.0&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div><div class="card"><h3>lodash 4.17.15 → 4.18.1</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade lodash 4.17.15 -&gt; 4.18.1</b>: <code>npm install lodash@4.18.1</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;4.17.15&#x27; does not admit 4.18.1; the manifest must change.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -10,5 +10,5 @@
+   &quot;dependencies&quot;: {
+     &quot;express&quot;: &quot;4.17.1&quot;,
+-    &quot;lodash&quot;: &quot;4.17.15&quot;,
++    &quot;lodash&quot;: &quot;4.18.1&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+     &quot;dayjs&quot;: &quot;^1.11.10&quot;,
+</pre></div><div class="card"><h3>path-to-regexp 0.1.7 → 0.1.13</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade express to 4.22.0</b>: <code>npm install express@4.22.0</code> — Smallest express release whose dependency chain resolves path-to-regexp to 0.1.13 (registry metadata).</li></ul>
+<ul><li>parent express@4.17.1: excludes fix — express requires path-to-regexp@&#x27;0.1.7&#x27;, which excludes 0.1.13.</li><li>upgrade express 4.17.1 -&gt; 4.22.0: resolves fix — Registry dependency ranges along 1 path(s), e.g. express@4.22.0 -&gt; path-to-regexp@0.1.13 (range &#x27;~0.1.12&#x27;): resolves path-to-regexp to 0.1.13.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.22.0&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div><div class="card"><h3>qs 6.7.0 → 6.16.0</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade express to 4.22.3</b>: <code>npm install express@4.22.3</code> — Smallest express release whose dependency chain resolves qs to 6.16.0 (registry metadata).</li></ul>
+<ul><li>parent body-parser@1.19.0: excludes fix — body-parser requires qs@&#x27;6.7.0&#x27;, which excludes 6.16.0.</li><li>parent express@4.17.1: excludes fix — express requires qs@&#x27;6.7.0&#x27;, which excludes 6.16.0.</li><li>upgrade express 4.17.1 -&gt; 4.22.3: resolves fix — Registry dependency ranges along 2 path(s), e.g. express@4.22.3 -&gt; qs@6.16.0 (range &#x27;~6.16.0&#x27;): resolves qs to 6.16.0.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.22.3&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div><div class="card"><h3>jinja2 3.1.4 → 3.1.6</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade jinja2 3.1.4 -&gt; 3.1.6</b>: <code>pip install &#x27;jinja2==3.1.6&#x27;</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;==3.1.4&#x27; does not admit 3.1.6; the manifest must change.</li></ul>
+<pre>--- a/services/report-worker/requirements.txt
++++ b/services/report-worker/requirements.txt
+@@ -2,4 +2,4 @@
+ requests==2.25.1
+ PyYAML==5.3.1
+-Jinja2==3.1.4
++Jinja2==3.1.6
+ flask&gt;=2.0
+</pre></div><div class="card"><h3>express 4.17.1 → 4.20.0</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade express 4.17.1 -&gt; 4.20.0</b>: <code>npm install express@4.20.0</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;4.17.1&#x27; does not admit 4.20.0; the manifest must change.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.20.0&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div><div class="card"><h3>send 0.17.1 → 0.19.0</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: True</p>
+<ul><li><b>Upgrade express to 4.21.0</b>: <code>npm install express@4.21.0</code> — Smallest express release whose dependency chain resolves send to 0.19.0 (registry metadata).</li></ul>
+<ul><li>parent express@4.17.1: excludes fix — express requires send@&#x27;0.17.1&#x27;, which excludes 0.19.0.</li><li>parent serve-static@1.14.1: excludes fix — serve-static requires send@&#x27;0.17.1&#x27;, which excludes 0.19.0.</li><li>upgrade express 4.17.1 -&gt; 4.21.0: resolves fix — Registry dependency ranges along 2 path(s), e.g. express@4.21.0 -&gt; send@0.19.0 (range &#x27;0.19.0&#x27;): resolves send to 0.19.0.</li><li>breaking-change boundary: via parent — send 0.17.1 -&gt; 0.19.0 crosses a semver boundary, but the version is selected by the upgraded parent&#x27;s own declared range.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.21.0&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div><div class="card"><h3>serve-static 1.14.1 → 1.16.0</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade express to 4.20.0</b>: <code>npm install express@4.20.0</code> — Smallest express release whose dependency chain resolves serve-static to 1.16.0 (registry metadata).</li></ul>
+<ul><li>parent express@4.17.1: excludes fix — express requires serve-static@&#x27;1.14.1&#x27;, which excludes 1.16.0.</li><li>upgrade express 4.17.1 -&gt; 4.20.0: resolves fix — Registry dependency ranges along 1 path(s), e.g. express@4.20.0 -&gt; serve-static@1.16.0 (range &#x27;1.16.0&#x27;): resolves serve-static to 1.16.0.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.20.0&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div><div class="card"><h3>requests 2.25.1 → 2.33.0</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: False</p>
+<ul><li><b>Upgrade requests 2.25.1 -&gt; 2.33.0</b>: <code>pip install &#x27;requests==2.33.0&#x27;</code> — The declared version/range excludes the fixed version.</li></ul>
+<ul><li>declared range: change required — Declared &#x27;==2.25.1&#x27; does not admit 2.33.0; the manifest must change.</li></ul>
+<pre>--- a/services/report-worker/requirements.txt
++++ b/services/report-worker/requirements.txt
+@@ -1,4 +1,4 @@
+ # report-worker (Python) — SENTINEL-SC demo. Intentionally vulnerable pins. DO NOT DEPLOY.
+-requests==2.25.1
++requests==2.33.0
+ PyYAML==5.3.1
+ Jinja2==3.1.4
+</pre></div><div class="card"><h3>cookie 0.4.0 → 0.7.0</h3>
+<p>State: <b>safe_candidate</b> · Fix confidence: <b>verified</b> · Major change: True</p>
+<ul><li><b>Upgrade express to 4.21.1</b>: <code>npm install express@4.21.1</code> — Smallest express release whose dependency chain resolves cookie to 0.7.1 (registry metadata).</li></ul>
+<ul><li>parent express@4.17.1: excludes fix — express requires cookie@&#x27;0.4.0&#x27;, which excludes 0.7.0.</li><li>upgrade express 4.17.1 -&gt; 4.21.1: resolves fix — Registry dependency ranges along 1 path(s), e.g. express@4.21.1 -&gt; cookie@0.7.1 (range &#x27;0.7.1&#x27;): resolves cookie to 0.7.1.</li><li>breaking-change boundary: via parent — cookie 0.4.0 -&gt; 0.7.0 crosses a semver boundary, but the version is selected by the upgraded parent&#x27;s own declared range.</li></ul>
+<pre>--- a/package.json
++++ b/package.json
+@@ -9,5 +9,5 @@
+   },
+   &quot;dependencies&quot;: {
+-    &quot;express&quot;: &quot;4.17.1&quot;,
++    &quot;express&quot;: &quot;4.21.1&quot;,
+     &quot;lodash&quot;: &quot;4.17.15&quot;,
+     &quot;axios&quot;: &quot;0.21.1&quot;,
+</pre></div>
+<h2>Intelligence providers</h2><table><tr><th>Provider</th><th>Status</th><th>Live</th><th>Cache</th><th>Stale/fixture</th><th>Unavailable</th><th>Errors</th></tr><tr><td>OSV.dev</td><td>ok</td><td>75</td><td>2</td><td>0</td><td>0</td><td></td></tr><tr><td>npm registry</td><td>ok</td><td>55</td><td>0</td><td>0</td><td>0</td><td></td></tr><tr><td>PyPI JSON API</td><td>ok</td><td>4</td><td>0</td><td>0</td><td>0</td><td></td></tr><tr><td>OpenSSF Scorecard</td><td>ok</td><td>9</td><td>0</td><td>0</td><td>0</td><td></td></tr><tr><td>CISA KEV catalog</td><td>ok</td><td>1</td><td>0</td><td>0</td><td>0</td><td></td></tr><tr><td>FIRST EPSS</td><td>ok</td><td>2</td><td>0</td><td>0</td><td>0</td><td></td></tr></table>
+<h2>Coverage</h2><table><tr><th>File</th><th>Parser</th><th>Status</th><th>Packages</th><th>Notes</th></tr><tr><td class='mono'>package.json</td><td>package.json</td><td>parsed</td><td>6</td><td>Declared dependencies read; versions taken from lockfile. </td></tr><tr><td class='mono'>package-lock.json</td><td>package-lock v3</td><td>parsed</td><td>56</td><td>Exact versions, integrity hashes and dependency edges parsed from lockfile. </td></tr><tr><td class='mono'>services/report-worker/requirements.txt</td><td>requirements.txt</td><td>partial</td><td>4</td><td>4 requirement(s) parsed. requirements.txt does not record which package pulled in which; transitive relationships are unknown (pip-compile &#x27;# via&#x27; annotations are used when present). Some requirements are ranges, not exact pins; their installed version cannot be verified.</td></tr></table>
+<p class="muted">Generated by SENTINEL-SC. Scores are explained in the JSON report (findings[].scores.factors). Reachability levels describe static evidence only; no exploit was executed.</p>
+</body></html>

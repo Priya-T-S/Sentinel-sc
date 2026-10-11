@@ -1,0 +1,72 @@
+# Reusable SENTINEL-SC supply-chain security gate.
+#
+# Call it from another workflow:
+#   jobs:
+#     supply-chain:
+#       uses: <owner>/<repo>/.github/workflows/sentinel-gate.yml@<commit-sha>
+#       with:
+#         scan-path: .
+#         policy-file: .sentinel-policy.json
+#
+# Security notes: least-privilege token, no secrets required, third-party actions pinned by
+# commit SHA (replace the placeholders below with the SHAs you have reviewed), and the scanner
+# never installs or executes the scanned project's dependencies.
+name: sentinel-gate
+on:
+  workflow_call:
+    inputs:
+      scan-path:
+        type: string
+        default: "."
+      policy-file:
+        type: string
+        default: ""
+      sentinel-ref:
+        description: Commit SHA of SENTINEL-SC to use
+        type: string
+        default: ""
+  workflow_dispatch:
+    inputs:
+      scan-path:
+        type: string
+        default: "demo/demo-app"
+permissions:
+  contents: read
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+      - name: Install SENTINEL-SC (pinned dependencies)
+        run: python -m pip install --disable-pip-version-check -r backend/requirements.txt
+      - name: Run security gate
+        working-directory: backend
+        env:
+          SCAN_PATH: ${{ inputs.scan-path }}
+          POLICY_FILE: ${{ inputs.policy-file }}
+        run: |
+          set -o pipefail
+          ARGS=(scan "$GITHUB_WORKSPACE/$SCAN_PATH" --json "$RUNNER_TEMP/sentinel.json" --sbom "$RUNNER_TEMP/sbom.cdx.json" --html "$RUNNER_TEMP/sentinel.html" --quiet)
+          if [ -n "$POLICY_FILE" ]; then ARGS+=(--policy "$GITHUB_WORKSPACE/$POLICY_FILE"); fi
+          python -m sentinel "${ARGS[@]}" | tee "$RUNNER_TEMP/gate.txt"
+      - name: Job summary
+        if: always()
+        run: |
+          { echo '### SENTINEL-SC supply-chain gate'; echo '```'; cat "$RUNNER_TEMP/gate.txt" 2>/dev/null; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: sentinel-sc-report
+          path: |
+            ${{ runner.temp }}/sentinel.json
+            ${{ runner.temp }}/sbom.cdx.json
+            ${{ runner.temp }}/sentinel.html

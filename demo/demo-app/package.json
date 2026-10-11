@@ -1,0 +1,20 @@
+{
+  "name": "acme-orders-api",
+  "version": "1.4.0",
+  "private": true,
+  "description": "SENTINEL-SC demo application. Intentionally pins vulnerable dependency versions. DO NOT DEPLOY.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "lodash": "4.17.15",
+    "axios": "0.21.1",
+    "dayjs": "^1.11.10",
+    "lodahs": "file:./vendor/lodahs"
+  },
+  "devDependencies": {
+    "minimist": "1.2.5"
+  }
+}

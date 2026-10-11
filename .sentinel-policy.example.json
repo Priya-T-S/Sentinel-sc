@@ -1,0 +1,16 @@
+{
+  "fail_on_vulnerability_severity": "high",
+  "fail_min_confidence": "medium",
+  "fail_on_known_exploited": true,
+  "fail_on_intelligence_unavailable": true,
+  "fail_only_if_fix_available": false,
+  "warn_on_vulnerability_severity": "medium",
+  "warn_on_signal_severity": "medium",
+  "fail_on_signal_kinds": ["ci_pwn_request", "secret_private_key", "integrity_mismatch", "scope_registry_mismatch"],
+  "require_lockfile": true,
+  "strict_lockfile": false,
+  "flag_unpinned": true,
+  "ignore_dev_dependencies": false,
+  "disallowed_licenses": [],
+  "ignored_advisories": []
+}

@@ -1,0 +1,5 @@
+{
+  "service": "acme-orders-api",
+  "aws": { "accessKeyId": "AKIAIOSFODNN7EXAMPLE", "region": "us-east-1" },
+  "note": "The access key above is AWS's documented example value, used to demonstrate secret detection."
+}

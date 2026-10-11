@@ -1,0 +1,532 @@
+{
+  "verdict": "fail",
+  "exit_code": 1,
+  "violations": [
+    {
+      "finding_id": "F-5674a62645",
+      "package": "pyyaml@5.3.1",
+      "advisory": "GHSA-8q59-q68h-6hv4",
+      "severity": "critical",
+      "confidence": "high",
+      "rule": "fail_on_vulnerability_severity",
+      "message": "critical vulnerability GHSA-8q59-q68h-6hv4 (confidence high)"
+    },
+    {
+      "finding_id": "F-3444706b75",
+      "package": null,
+      "signal": "ci_pwn_request",
+      "severity": "critical",
+      "confidence": "high",
+      "file": ".github/workflows/ci.yml",
+      "rule": "fail_on_signal_kinds",
+      "message": "pull_request_target checks out untrusted PR code"
+    },
+    {
+      "finding_id": "F-a6fb881718",
+      "package": "minimist@1.2.5",
+      "advisory": "GHSA-xvch-5gv4-984h",
+      "severity": "critical",
+      "confidence": "high",
+      "rule": "fail_on_vulnerability_severity",
+      "message": "critical vulnerability GHSA-xvch-5gv4-984h (confidence high)"
+    }
+  ],
+  "warnings": [
+    {
+      "finding_id": "F-a9a935b9f5",
+      "package": "lodash@4.17.15",
+      "advisory": "GHSA-35jh-r3h4-6jhm",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-35jh-r3h4-6jhm"
+    },
+    {
+      "finding_id": "F-fdd9e48ba9",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-pjwm-pj3p-43mv",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-pjwm-pj3p-43mv"
+    },
+    {
+      "finding_id": "F-9a0e49fb49",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-jr5f-v2jv-69x6",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-jr5f-v2jv-69x6"
+    },
+    {
+      "finding_id": "F-57f1a3fb62",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-p92q-9vqr-4j8v",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-p92q-9vqr-4j8v"
+    },
+    {
+      "finding_id": "F-bea1bc8698",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-cph5-m8f7-6c5x",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-cph5-m8f7-6c5x"
+    },
+    {
+      "finding_id": "F-c2c071bfac",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-43fc-jf86-j433",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-43fc-jf86-j433"
+    },
+    {
+      "finding_id": "F-bba1a98ba5",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-62hf-57xw-28j9",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-62hf-57xw-28j9"
+    },
+    {
+      "finding_id": "F-04826f3ace",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-hfxv-24rg-xrqf",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-hfxv-24rg-xrqf"
+    },
+    {
+      "finding_id": "F-63338ec84c",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-j5f8-grm9-p9fc",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-j5f8-grm9-p9fc"
+    },
+    {
+      "finding_id": "F-f7140a3cc3",
+      "package": "lodash@4.17.15",
+      "advisory": "GHSA-p6mc-m468-83gw",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-p6mc-m468-83gw"
+    },
+    {
+      "finding_id": "F-dc6af83be7",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-pf86-5x62-jrwf",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-pf86-5x62-jrwf"
+    },
+    {
+      "finding_id": "F-fa037b0e07",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-6chq-wfr3-2hj9",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-6chq-wfr3-2hj9"
+    },
+    {
+      "finding_id": "F-bacc37b192",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-pmwg-cvhr-8vh7",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-pmwg-cvhr-8vh7"
+    },
+    {
+      "finding_id": "F-592df95438",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-3g43-6gmg-66jw",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-3g43-6gmg-66jw"
+    },
+    {
+      "finding_id": "F-78464cfa40",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-m7pr-hjqh-92cm",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-m7pr-hjqh-92cm"
+    },
+    {
+      "finding_id": "F-e5fa91b6f6",
+      "package": "lodash@4.17.15",
+      "advisory": "GHSA-f23m-r3pf-42rh",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-f23m-r3pf-42rh"
+    },
+    {
+      "finding_id": "F-cf553e5d84",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-wf5p-g6vw-rhxx",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-wf5p-g6vw-rhxx"
+    },
+    {
+      "finding_id": "F-c22f2eeb99",
+      "package": "qs@6.7.0",
+      "advisory": "GHSA-hrpp-h998-j3pp",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-hrpp-h998-j3pp"
+    },
+    {
+      "finding_id": "F-61b183b4a9",
+      "package": "body-parser@1.19.0",
+      "advisory": "GHSA-qwcr-r2fm-qrc7",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-qwcr-r2fm-qrc7"
+    },
+    {
+      "finding_id": "F-e1464025d4",
+      "package": "path-to-regexp@0.1.7",
+      "advisory": "GHSA-37ch-88jc-xwx2",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-37ch-88jc-xwx2"
+    },
+    {
+      "finding_id": "F-845f4e5c41",
+      "package": "path-to-regexp@0.1.7",
+      "advisory": "GHSA-rhx6-c78j-4q9w",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-rhx6-c78j-4q9w"
+    },
+    {
+      "finding_id": "F-9e4f36be09",
+      "package": "requests@2.25.1",
+      "advisory": "GHSA-j8r2-6x86-q33q",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-j8r2-6x86-q33q"
+    },
+    {
+      "finding_id": "F-ce704c3edf",
+      "package": "express@4.17.1",
+      "advisory": "GHSA-rv95-896h-c2vc",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-rv95-896h-c2vc"
+    },
+    {
+      "finding_id": "F-31dbe331c6",
+      "package": "requests@2.25.1",
+      "advisory": "GHSA-9wx4-h78v-vm56",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-9wx4-h78v-vm56"
+    },
+    {
+      "finding_id": "F-d9e6010d82",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-7q8q-rj6j-mhjq",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-7q8q-rj6j-mhjq"
+    },
+    {
+      "finding_id": "F-793d765405",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-mmx7-hfxf-jppx",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-mmx7-hfxf-jppx"
+    },
+    {
+      "finding_id": "F-0f7fd19df2",
+      "package": null,
+      "signal": "ci_script_injection",
+      "severity": "high",
+      "confidence": "high",
+      "file": ".github/workflows/ci.yml",
+      "rule": "warn_on_signal_severity",
+      "message": "Untrusted event data interpolated into a shell script"
+    },
+    {
+      "finding_id": "F-e425a3c42c",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-xx6v-rp6x-q39c",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-xx6v-rp6x-q39c"
+    },
+    {
+      "finding_id": "F-ea1f6f655e",
+      "package": "lodash@4.17.15",
+      "advisory": "GHSA-29mw-wpgm-hmr9",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-29mw-wpgm-hmr9"
+    },
+    {
+      "finding_id": "F-b0d0ac562c",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-5c9x-8gcm-mpgx",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-5c9x-8gcm-mpgx"
+    },
+    {
+      "finding_id": "F-259c13e094",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-vf2m-468p-8v99",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-vf2m-468p-8v99"
+    },
+    {
+      "finding_id": "F-e42fc89cc7",
+      "package": "requests@2.25.1",
+      "advisory": "GHSA-9hjg-9r4m-mvj7",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-9hjg-9r4m-mvj7"
+    },
+    {
+      "finding_id": "F-6181e1f6a7",
+      "package": "express@4.17.1",
+      "advisory": "GHSA-qw6h-vgh9-j6wx",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-qw6h-vgh9-j6wx"
+    },
+    {
+      "finding_id": "F-d7ac51b1f9",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-3p68-rc4w-qgx5",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-3p68-rc4w-qgx5"
+    },
+    {
+      "finding_id": "F-7a9dd91bb8",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-fvcv-3m26-pcqx",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-fvcv-3m26-pcqx"
+    },
+    {
+      "finding_id": "F-b56e0fd897",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-w9j2-pvgh-6h63",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-w9j2-pvgh-6h63"
+    },
+    {
+      "finding_id": "F-b04ea37729",
+      "package": "axios@0.21.1",
+      "advisory": "GHSA-898c-q2cr-xwhg",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-898c-q2cr-xwhg"
+    },
+    {
+      "finding_id": "F-fe2839564c",
+      "package": "requests@2.25.1",
+      "advisory": "GHSA-gc5v-m9x4-r6x2",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-gc5v-m9x4-r6x2"
+    },
+    {
+      "finding_id": "F-5697f42881",
+      "package": "qs@6.7.0",
+      "advisory": "GHSA-4mjr-xmp4-gh2g",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-4mjr-xmp4-gh2g"
+    },
+    {
+      "finding_id": "F-4580e88769",
+      "package": "jinja2@3.1.4",
+      "advisory": "GHSA-gmj6-6f8f-6699",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-gmj6-6f8f-6699"
+    },
+    {
+      "finding_id": "F-6ecd70a065",
+      "package": "send@0.17.1",
+      "advisory": "GHSA-m6fv-jmcg-4jfg",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-m6fv-jmcg-4jfg"
+    },
+    {
+      "finding_id": "F-34cbf3ebb9",
+      "package": "serve-static@1.14.1",
+      "advisory": "GHSA-cm22-4g7w-348p",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-cm22-4g7w-348p"
+    },
+    {
+      "finding_id": "F-f0055cf35d",
+      "package": "lodahs",
+      "signal": "typosquat",
+      "severity": "high",
+      "confidence": "medium",
+      "file": null,
+      "rule": "warn_on_signal_severity",
+      "message": "Name resembles popular package 'lodash'"
+    },
+    {
+      "finding_id": "F-31250ee4e1",
+      "package": "lodahs",
+      "signal": "source_patterns",
+      "severity": "high",
+      "confidence": "medium",
+      "file": null,
+      "rule": "warn_on_signal_severity",
+      "message": "Risky code patterns in package source (4 type(s))"
+    },
+    {
+      "finding_id": "F-1bdc0f8162",
+      "package": "jinja2@3.1.4",
+      "advisory": "GHSA-q2x7-8rv6-6q7h",
+      "severity": "high",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "high vulnerability GHSA-q2x7-8rv6-6q7h"
+    },
+    {
+      "finding_id": "F-ee656f3c9a",
+      "package": "mime",
+      "signal": "install_script",
+      "severity": "medium",
+      "confidence": "high",
+      "file": null,
+      "rule": "warn_on_signal_severity",
+      "message": "Runs code at install time"
+    },
+    {
+      "finding_id": "F-8f75314c40",
+      "package": "lodahs",
+      "signal": "install_script",
+      "severity": "medium",
+      "confidence": "high",
+      "file": null,
+      "rule": "warn_on_signal_severity",
+      "message": "Runs code at install time"
+    },
+    {
+      "finding_id": "F-54d5dd0dbb",
+      "package": null,
+      "signal": "ci_excessive_permissions",
+      "severity": "medium",
+      "confidence": "high",
+      "file": ".github/workflows/ci.yml",
+      "rule": "warn_on_signal_severity",
+      "message": "Workflow grants broad write permissions"
+    },
+    {
+      "finding_id": "F-6dd7594b30",
+      "package": null,
+      "signal": "ci_unpinned_action",
+      "severity": "medium",
+      "confidence": "high",
+      "file": ".github/workflows/ci.yml",
+      "rule": "warn_on_signal_severity",
+      "message": "Action not pinned to a commit: some-org/setup-node-cache@v2"
+    },
+    {
+      "finding_id": "F-897cfbcde1",
+      "package": "jinja2@3.1.4",
+      "advisory": "GHSA-cpwx-vrp4-4pq7",
+      "severity": "medium",
+      "confidence": "high",
+      "rule": "warn_on_vulnerability_severity",
+      "message": "medium vulnerability GHSA-cpwx-vrp4-4pq7"
+    },
+    {
+      "finding_id": "F-94b39a1f74",
+      "package": null,
+      "signal": "unpinned",
+      "severity": "low",
+      "confidence": "high",
+      "file": "services/report-worker/requirements.txt",
+      "rule": "flag_unpinned",
+      "message": "Unpinned dependency: flask"
+    },
+    {
+      "rule": "fail_on_unverified_packages",
+      "message": "1 package(s) have no exact version and could not be matched"
+    }
+  ],
+  "warning_count": 52,
+  "policy": {
+    "version": 1,
+    "fail_on_vulnerability_severity": "critical",
+    "fail_min_confidence": "medium",
+    "fail_only_if_fix_available": false,
+    "fail_on_known_exploited": true,
+    "warn_on_vulnerability_severity": "medium",
+    "warn_on_signal_severity": "medium",
+    "fail_on_signal_kinds": [
+      "ci_pwn_request",
+      "secret_private_key",
+      "integrity_mismatch",
+      "scope_registry_mismatch"
+    ],
+    "require_lockfile": true,
+    "strict_lockfile": false,
+    "flag_unpinned": true,
+    "fail_on_intelligence_unavailable": true,
+    "fail_on_unverified_packages": false,
+    "ignore_dev_dependencies": false,
+    "disallowed_licenses": [],
+    "ignored_advisories": []
+  },
+  "notes": "Deterministic evaluation of engine output; heuristics never fail a build unless listed in fail_on_signal_kinds."
+}

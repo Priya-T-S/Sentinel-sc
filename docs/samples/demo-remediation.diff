@@ -1,0 +1,30 @@
+--- a/package.json
++++ b/package.json
+@@ -9,12 +9,12 @@
+   },
+   "dependencies": {
+-    "express": "4.17.1",
+-    "lodash": "4.17.15",
+-    "axios": "0.21.1",
++    "express": "4.22.3",
++    "lodash": "4.18.1",
++    "axios": "0.34.0",
+     "dayjs": "^1.11.10",
+     "lodahs": "file:./vendor/lodahs"
+   },
+   "devDependencies": {
+-    "minimist": "1.2.5"
++    "minimist": "1.2.6"
+   }
+ }
+--- a/services/report-worker/requirements.txt
++++ b/services/report-worker/requirements.txt
+@@ -1,5 +1,5 @@
+ # report-worker (Python) — SENTINEL-SC demo. Intentionally vulnerable pins. DO NOT DEPLOY.
+-requests==2.25.1
+-PyYAML==5.3.1
+-Jinja2==3.1.4
++requests==2.33.0
++PyYAML==5.4
++Jinja2==3.1.6
+ flask>=2.0
