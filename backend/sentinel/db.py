@@ -117,6 +117,8 @@ DEFAULT_SETTINGS = {
     "enable_registry_metadata": True,
     "enable_scorecard": True,
     "enable_epss_kev": True,
+    "ai_assistance": False,           # optional Claude explanations (needs ANTHROPIC_API_KEY); never affects findings
+    "ai_share_code_snippets": False,  # send call-site code lines to the AI (off: only file:line)
     "policy": None,  # filled from policy.DEFAULT_POLICY on first read
 }
 

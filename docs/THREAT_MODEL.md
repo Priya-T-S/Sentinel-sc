@@ -26,7 +26,9 @@ registry metadata and advisory text may all be hostile. A false "clean" verdict 
 ## Network attacks
 | Threat | Control | Test(s) |
 |---|---|---|
-| SSRF | No user-supplied URLs are fetched; fixed allow-list of 6 public HTTPS hosts | `test_egress_blocked` (loopback, RFC1918, metadata IP, IPv6, look-alikes, credentials, ports, schemes) |
+| SSRF | The user's URL is never fetched: GitHub URLs are parsed into owner/repo/ref with strict character rules and the request URLs are rebuilt from those parts; fixed allow-list of public HTTPS hosts | `test_egress_blocked`, `test_parse_rejects` (GitLab, look-alike hosts, metadata IP, credentials, ports, ssh, traversal in refs, shell characters) |
+| Redirects / hostile archive from GitHub import | Every redirect re-validated (internal IPs, other hosts, http rejected); archive streamed with a 50 MB cap; then the normal ZIP traversal/symlink/bomb checks | `test_archive_redirect_to_disallowed_host_blocked`, `test_oversized_archive_rejected`, `test_hostile_archive_contents_rejected` |
+| Private repo / rate-limit confusion | No tokens are used; 404 and private repos give a clear "public only" error; 403/429 give a rate-limit message (never a partial "clean" result) | `test_missing_or_private_repo`, `test_rate_limit_message` |
 | Redirect to internal address | Auto-redirects off; each hop re-validated (max 3) | `test_redirect_to_internal_host_blocked` |
 | DNS rebinding of provider names | Allow-listed names over TLS with verification; a rebinding attacker cannot present valid certificates | — |
 | Oversized/malformed/slow responses | Streaming size caps, parse errors handled, timeouts, bounded retries with backoff | `test_oversized_and_malformed_provider_responses` |
@@ -47,8 +49,33 @@ registry metadata and advisory text may all be hostile. A false "clean" verdict 
 | Clickjacking | `frame-ancestors 'none'`, `X-Frame-Options: DENY` | `test_security_headers` |
 | Vulnerable detector dependencies | All versions pinned; pip-audit and npm audit clean; react-router replaced by a 40-line router | TEST_RESULTS.md |
 
+## New-feature specific risks
+
+| Threat | Control | Test(s) |
+|---|---|---|
+| A malicious PR modifies the scanner to approve itself | PR workflow checks out SENTINEL-SC from the trusted base ref (or a pinned SHA), never from the PR | workflow design (`.github/workflows/sentinel-pr-review.yml`) |
+| PR workflow token abuse / script injection | `pull_request` trigger (read-only token for forks), `contents: read` + `pull-requests: write` only, values passed through env (no `${{ }}` in shell), SHA-pinned actions | self-scan with the CI analyzer: no findings |
+| Markdown/HTML injection into the PR comment via package names or advisory titles | All attacker-influenced text escaped (`<`, `>`, `[`, `]`, `\|`, backticks…); links only for https advisory URLs | `test_markdown_is_safe_and_compact` |
+| A PR blocked by old debt (alert fatigue) or old debt hidden by a PR | Review gates only on NEW findings; main-branch gate still covers existing debt | `test_pre_existing_debt_does_not_block_a_pr` |
+| Forged / tampered provenance | sigstore-python verifies signature, certificate chain and transparency-log proof; certificate identity must match the attested repo **and** commit | `test_tampered_statement_is_invalid`, `test_claimed_repository_must_match_certificate` |
+| Valid provenance for a different file (artifact substitution) | Verified statement's SHA-512 must equal the lockfile integrity (or registry hash) | `test_artifact_hash_mismatch_is_invalid` |
+| Package published from an attacker's repository | Verified build repository compared with the registry's declared repository → `repo_mismatch` finding | `test_repository_mismatch_with_registry` |
+| Trust-root unavailability | Falls back to sigstore-python's bundled trust root; failures are `unavailable`, never "verified" | `test_absent_and_malformed` |
+
+## Multi-agent and AI-specific risks
+
+| Threat | Control | Test(s) |
+|---|---|---|
+| An agent over-claims (a "verified fix" without a re-check, call-site evidence without a line) | Independent Reviewer pass 1 downgrades unsupported claims before scoring and records each correction on the finding | `test_reviewer_downgrades_unsupported_claims`, `test_reviewer_never_upgrades` |
+| Inconsistent final report | Reviewer pass 2: score bounds and explanations, evidence on every finding, summary counts, reproducible policy verdict; otherwise `rejected` | `test_reviewer_rejects_inconsistent_report` |
+| AI hallucination (invented CVEs or fixes, "safe" verdicts) | AI is not a source of truth: it receives only engine evidence, must return schema-valid JSON, and a deterministic guard drops output that cites unknown findings or contradicts the verdict; AI output never changes findings, scores or policy | `test_ai_guard_and_no_influence_on_findings` |
+| **Prompt injection via attacker-controlled text** (advisory details, package names) sent to the AI | The AI has no tools and can take no actions; evidence is passed as JSON data; its only output is display text that is guarded and labelled "AI-generated, not a source of truth"; the verdict is computed before the AI runs | design + guard tests |
+| Leaking code or secrets to a third party | AI off by default and requires an explicit credential; only top-finding evidence is sent; secret findings are excluded; code lines only with a second opt-in; data sent is listed in the result's privacy section | `test_ai_evidence_excludes_code_unless_enabled`, `test_ai_requires_opt_in_and_credentials` |
+| AI outage or refusal breaking scans | Failures and refusals are recorded as `error` / `declined`; the scan result is unchanged; server-side refusal fallbacks enabled | `test_ai_refusal_and_errors_do_not_break_scan` |
+| Parallel agents corrupting shared state | Each agent writes only its own section of the board; shared counters are locked; cancellation propagates from either thread | `test_vuln_and_trust_agents_run_in_parallel`, full suite |
+
 ## Supply-chain attacks detected in scanned projects
-Typosquatting (with corroboration rules), dependency confusion (`--extra-index-url`, scoped-registry mismatch,
+Typosquatting (with corroboration rules), invalid or mismatched build provenance, risk introduced by pull requests (new packages, downgrades, install scripts), dependency confusion (`--extra-index-url`, scoped-registry mismatch,
 non-default registries), install-time scripts, lockfile drift and integrity issues (missing/weak/mismatched hashes),
 mutable git/URL references, compromised-release indicators (new packages, fresh releases, release bursts, publisher
 changes, deprecation/yank), risky code in included package source, untrusted CI triggers, excessive token
@@ -57,7 +84,8 @@ permissions, unpinned actions, script injection, committed credentials.
 ## Residual risks and non-goals
 - **No authentication or tenant isolation** — single-user local tool bound to 127.0.0.1. Network exposure needs authN/Z and TLS first.
 - **Heuristics** can miss sophisticated malware (runtime-fetched stages, novel obfuscation) and produce false positives.
-- **No cryptographic provenance verification**; attestations/signatures are reported as present/absent.
+- **Provenance verification scope:** npm + GitHub Actions SLSA provenance only; the npm registry's own publish attestation and other CI providers are not verified. A verified build proves *where* a package was built, not that its source is benign.
+- **GitHub import** downloads the full repository snapshot to memory and reveals the requested repo to GitHub; only public repositories, no authentication.
 - **Upstream trust**: OSV/GHSA data is treated as authoritative; a poisoned advisory would be believed (but rendered safely).
 - **Registry metadata** is owner-controlled and shown with its source.
 - **Static reachability** misses dynamic `require`, reflection and framework-internal calls; "not imported" is not proof of non-use.

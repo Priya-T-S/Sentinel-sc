@@ -25,6 +25,10 @@ Weights (an explicit, auditable ordering of evidence strength — not a statisti
 
 Range check disagreeing with OSV applies × 0.6. Heuristic priority = exposure × confidence (0.8 / 0.6 / 0.4).
 
+**Reviewed before scoring:** the Independent Security Reviewer runs before scores are computed, so a claim it
+downgrades (e.g. "fix verified" without an OSV re-check, "call-site evidence" without a file and line) is scored on
+the corrected value.
+
 **No double counting:** aliased advisories (GHSA + CVE + duplicate GHSA) are merged into one finding before scoring;
 package-level risk is the **maximum** of its findings, never a sum; dependency depth/breadth is shown as blast radius
 but not multiplied in (reachability already captures it).

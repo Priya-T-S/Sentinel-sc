@@ -86,6 +86,8 @@ export interface Finding {
   exploitation?: { kev: { cve: string; dateAdded?: string } | null; epss: { epss: number; percentile: number; date?: string } | null; summary: string; kev_checked?: boolean }
   remediation?: { state: RemState; target: string | null; fix_confidence: string; major_change?: boolean | null }
   scores: Scores
+  review?: { status: 'confirmed' | 'corrected'; corrections: { check: string; before: unknown; after: unknown; reason: string }[] }
+  ai_explanation?: { finding_id: string; plain_explanation: string; why_it_matters_here: string; investigation_steps: string[]; cited_facts: string[]; model: string; label: string }
 }
 
 export interface TrustItem { key: string; label: string; status: string; detail: string; source: string }
@@ -120,6 +122,7 @@ export interface PackageInfo {
   trust: { items: TrustItem[]; scorecard: { score: number; date: string; checks: { name: string; score: number; reason: string }[] } | null }
   registry: null | { available: boolean; origin: string; retrieved_at?: string; created?: string; latest?: string; published?: string; license?: string; description?: string; repository?: string; maintainers?: string[]; deprecated?: string | null; version_count?: number; recent_versions?: { version: string; published: string }[] }
   imported_in: { file: string; line: number; is_test: boolean }[]
+  provenance?: Provenance | null
   dependents: number
   dependencies: number
 }
@@ -172,6 +175,7 @@ export interface Summary {
   priority_buckets: Record<string, number>
   unverified_packages: number
   known_exploited: number
+  provenance?: Record<string, number>
   fixable: number; fix_verified: number
   max_priority: number | null
   top_priorities: { id: string; title: string; kind: FindingKind; severity: Severity; package_id?: string; priority: number | null; bucket: string; remediation?: string }[]
@@ -190,7 +194,7 @@ export interface PolicyResult {
 
 export interface ScanResult {
   schema: string
-  scan: { id: string; source_name: string; engine_version: string; offline: boolean; started_at: string; finished_at: string; duration_seconds: number; status: string; fatal_error: string | null }
+  scan: { id: string; source_name: string; engine_version: string; offline: boolean; started_at: string; finished_at: string; duration_seconds: number; status: string; fatal_error: string | null; source?: SourceInfo | null }
   coverage: { outcomes: Outcome[]; input: { files_seen: number; rejected: { path: string; reason: string }[]; skipped_large: number; bytes_read: number }; source_index: { files_scanned: number; languages: Record<string, number>; truncated: boolean }; unverified_packages: number; intel_unavailable_packages?: number; no_exact_version_packages?: number }
   providers: Provider[]
   privacy: { data_sent: { provider: string; data: string; calls: number }[]; never_sent: string }
@@ -200,6 +204,35 @@ export interface ScanResult {
   policy: PolicyResult
   package_count: number
   roots: { id: string; name: string; ecosystem: string; manifest?: string; lockfile?: string | null }[]
+  orchestration?: Orchestration
+  review?: ReviewReport
+  ai?: AIReport
+}
+
+export interface AgentRunInfo {
+  agent: string; title: string; role: string; status: string; started_at: number | null; duration: number | null
+  outputs: Record<string, unknown>; notes: string[]; error: string | null
+}
+export interface Orchestration {
+  plan: { step: number; agents: string[]; parallel: boolean; needs: string[]; why: string }[]
+  agents: AgentRunInfo[]
+  messages: { t: number; from: string; to: string; text: string }[]
+  principle: string
+}
+export interface ReviewCheck { description: string; checked: number; failed: number }
+export interface ReviewReport {
+  verdict: 'approved' | 'approved_with_corrections' | 'rejected'
+  statement: string
+  pass1: Record<string, ReviewCheck>
+  pass2: Record<string, ReviewCheck>
+  corrections: { check: string; target: string | null; before: unknown; after: unknown; reason: string }[]
+  conflicts: { type: string; package_id: string; package: string; detail: string; suggestion: string }[]
+}
+export interface AIReport {
+  enabled: boolean; status?: 'ok' | 'error' | 'declined'; reason?: string; error?: string; model?: string; served_by?: string
+  summary?: string; explained?: number; conflict_notes?: { conflict_index: number; note: string; next_steps: string[] }[]
+  guard_rejections?: Record<string, unknown>[]; input_tokens?: number; output_tokens?: number; estimated_cost_usd?: number
+  seconds?: number; data_sent?: string; shared_code_snippets?: boolean; refusal_category?: string | null
 }
 
 export interface ScanRow {
@@ -208,7 +241,7 @@ export interface ScanRow {
 }
 
 export interface ScanStatus extends ScanRow {
-  progress: null | { percent: number; stage: string | null; stages: { key: string; label: string; status: string; detail: string }[]; elapsed: number }
+  progress: null | { percent: number; stage: string | null; stages: { key: string; label: string; status: string; detail: string; agent?: string }[]; elapsed: number }
 }
 
 export interface GraphNode {
@@ -227,4 +260,35 @@ export interface WhatIfResult {
   unverified_changes: string[]
   limitations: string[]
   generated_at: string
+}
+
+export interface SourceInfo {
+  type: string
+  repository: string
+  url: string
+  requested_ref: string | null
+  resolved_ref: string
+  commit: string
+  commit_url: string
+  commit_date: string | null
+  archive_bytes: number
+  fetched_at: string
+}
+
+export interface Provenance {
+  status: 'verified' | 'invalid' | 'repo_mismatch' | 'absent' | 'unsupported' | 'unavailable'
+  reason?: string
+  repository?: string
+  commit?: string
+  workflow?: string
+  ref?: string
+  builder?: string
+  run_url?: string
+  rekor_log_index?: number
+  rekor_url?: string
+  signed_at?: string
+  trust_root?: string
+  digest_source?: string
+  declared_repository?: string
+  origin?: string
 }

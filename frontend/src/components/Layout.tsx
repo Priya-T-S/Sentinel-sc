@@ -1,4 +1,4 @@
-import { Activity, Boxes, ClipboardList, GitBranch, History, LayoutDashboard, Package, Radar, Settings, Wrench } from 'lucide-react'
+import { Activity, Bot, Boxes, ClipboardList, GitBranch, History, LayoutDashboard, Package, Radar, Settings, Wrench } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, useRouter } from '../router'
 import { useScan } from '../state'
@@ -11,6 +11,7 @@ const NAV = [
   { to: '/findings', label: 'Findings', icon: ClipboardList },
   { to: '/package', label: 'Package intel', icon: Package },
   { to: '/remediation', label: 'Remediation', icon: Wrench },
+  { to: '/agents', label: 'Agents', icon: Bot },
   { to: '/history', label: 'History & compare', icon: History },
   { to: '/settings', label: 'Settings', icon: Settings },
 ]

@@ -14,5 +14,9 @@ upgrade to W*. SENTINEL-SC keeps that deterministic core and adds:
 | Fixes | "Upgrade to ≥ fixed" | Smallest version fixing **all** advisories, re-checked on OSV; declared-range and parent-range checks; transitive fixes resolved through registry ranges along every path; one combined manifest diff; what-if comparison |
 | Malicious-package risk | None | Typosquat (with corroboration), install scripts, static source-pattern inspection, provenance/signature presence, integrity mismatch, dependency confusion, release-pattern and maintenance signals — labelled as heuristics |
 | Build pipeline risk | None | GitHub Actions: pwn-request, script injection, permissions, unpinned actions; secret exposure (redacted) |
+| Package origin | Not checked | Sigstore-verified build provenance: repo, commit, workflow, transparency-log entry, bound to the lockfile hash; mismatches flagged |
+| Pull requests | Re-reports everything | Reviews only what the PR adds (new packages, downgrades, typosquats, install scripts, new CVEs) and comments on the PR; scanner runs from the trusted base branch |
+| Self-checking | None | Multi-agent design with an Independent Reviewer that challenges every claim against its evidence and downgrades unsupported ones before scoring; optional AI explanations are guarded and never decide |
+| Input | Local files | Local files, ZIP, SBOM, or a public GitHub URL pinned to an exact commit |
 | Prevention | Exit code | Deterministic, auditable policy (confidence thresholds, accepted-risk list, license rules), CI workflow, CycloneDX SBOM + VEX, risk-regression diff between scans |
 | Privacy | Varies | Only package identifiers leave the machine; offline mode |

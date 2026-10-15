@@ -1,0 +1,9 @@
+{
+  "name": "lodahs",
+  "version": "1.0.0",
+  "description": "SYNTHETIC FIXTURE for SENTINEL-SC. Imitates a typosquat of 'lodash'. Contains no functional payload. Never install.",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node index.js"
+  }
+}

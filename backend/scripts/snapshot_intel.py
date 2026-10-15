@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from sentinel import db, engine  # noqa: E402
-from sentinel.config import DEMO_APP_DIR, FIXTURE_DIR  # noqa: E402
+from sentinel.config import DEMO_APP_DIR, DEMO_DIR, FIXTURE_DIR  # noqa: E402
 from sentinel.reposource import DirSource  # noqa: E402
 
 
@@ -27,6 +27,8 @@ def main():
     db.init(tmp)  # fresh DB => everything in it was fetched live by this run
     res = engine.run_scan(DirSource(str(DEMO_APP_DIR)), offline=False)
     engine.whatif(res)
+    # PR-review demo (base = main, head = risky pull request)
+    extra = [engine.run_scan(DirSource(str(DEMO_DIR / "pr-review" / sub)), offline=False) for sub in ("base", "head")]
     osv = next(p for p in res["providers"] if p["name"] == "osv")
     if osv["status"] not in ("ok",) or res["summary"]["unverified_packages"] > 1:
         print("refusing to snapshot: OSV was not fully reachable", osv, file=sys.stderr)
@@ -35,7 +37,7 @@ def main():
     entries = {r["key"]: {"provider": r["provider"], "fetched_at": r["fetched_at"], "value": json.loads(r["value_json"])}
                for r in rows}
     # The KEV catalogue is large; keep only the CVEs relevant to the demo to keep the fixture small.
-    cves = {c for f in res["findings"] if f["kind"] == "vulnerability" for c in f["advisory"]["cves"]}
+    cves = {c for r in [res, *extra] for f in r["findings"] if f["kind"] == "vulnerability" for c in f["advisory"]["cves"]}
     if "kev:catalog" in entries:
         cat = entries["kev:catalog"]["value"]
         cat["cves"] = {k: v for k, v in cat["cves"].items() if k in cves}
@@ -45,7 +47,7 @@ def main():
         "schema": "sentinel-sc/intel-snapshot@1",
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "description": "Versioned snapshot of public intelligence (OSV, npm, PyPI, OpenSSF Scorecard, CISA KEV, FIRST EPSS) "
-                       "retrieved live for demo/demo-app. Used only in offline mode or when a live provider fails; results "
+                       "retrieved live for demo/demo-app and demo/pr-review. Used only in offline mode or when a live provider fails; results "
                        "are labelled 'fixture' with the original retrieval time.",
         "entries": entries,
     }

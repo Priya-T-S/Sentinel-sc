@@ -22,6 +22,10 @@ from ..config import ALLOWED_HOSTS, LIMITS, USER_AGENT
 class ProviderError(RuntimeError):
     """A provider could not be reached or returned an unusable response."""
 
+    def __init__(self, message: str = "", status: Optional[int] = None):
+        super().__init__(message)
+        self.status = status
+
 
 class RequestBlocked(ProviderError):
     """The request violated the egress policy (non-allow-listed host, insecure scheme...)."""
@@ -54,10 +58,9 @@ def client() -> httpx.Client:
     return _client
 
 
-def request_json(method: str, url: str, *, body: Any = None, headers: Optional[dict] = None,
-                 max_bytes: Optional[int] = None, retries: Optional[int] = None) -> Any:
-    max_bytes = max_bytes or LIMITS.http_max_response_bytes
-    retries = LIMITS.http_retries if retries is None else retries
+def _request(method: str, url: str, *, body: Any, headers: Optional[dict], max_bytes: int,
+             retries: int, parse) -> Any:
+    """Shared hardened request loop. `parse(bytes)` turns the capped body into the result."""
     attempt = 0
     last_exc: Optional[Exception] = None
     while attempt <= retries:
@@ -74,9 +77,9 @@ def request_json(method: str, url: str, *, body: Any = None, headers: Optional[d
                     if resp.status_code == 404:
                         return None
                     if resp.status_code == 429 or resp.status_code >= 500:
-                        raise ProviderError(f"provider returned HTTP {resp.status_code}")
+                        raise ProviderError(f"provider returned HTTP {resp.status_code}", resp.status_code)
                     if resp.status_code >= 400:
-                        raise ProviderError(f"provider rejected request (HTTP {resp.status_code})")
+                        raise ProviderError(f"provider rejected request (HTTP {resp.status_code})", resp.status_code)
                     declared = resp.headers.get("content-length")
                     if declared and declared.isdigit() and int(declared) > max_bytes:
                         raise ProviderError("provider response exceeds size limit")
@@ -85,10 +88,7 @@ def request_json(method: str, url: str, *, body: Any = None, headers: Optional[d
                         buf.extend(chunk)
                         if len(buf) > max_bytes:
                             raise ProviderError("provider response exceeds size limit")
-                    try:
-                        return json.loads(bytes(buf))
-                    except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as exc:
-                        raise ProviderError("provider returned malformed JSON") from exc
+                    return parse(bytes(buf))
             raise ProviderError("too many redirects")
         except RequestBlocked:
             raise
@@ -101,3 +101,22 @@ def request_json(method: str, url: str, *, body: Any = None, headers: Optional[d
         if attempt <= retries:
             time.sleep(min(0.5 * (2 ** (attempt - 1)), 4.0))
     raise last_exc or ProviderError("request failed")
+
+
+def _parse_json(data: bytes) -> Any:
+    try:
+        return json.loads(data)
+    except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as exc:
+        raise ProviderError("provider returned malformed JSON") from exc
+
+
+def request_json(method: str, url: str, *, body: Any = None, headers: Optional[dict] = None,
+                 max_bytes: Optional[int] = None, retries: Optional[int] = None) -> Any:
+    """JSON request through the hardened client. Returns None on 404."""
+    return _request(method, url, body=body, headers=headers, max_bytes=max_bytes or LIMITS.http_max_response_bytes,
+                    retries=LIMITS.http_retries if retries is None else retries, parse=_parse_json)
+
+
+def request_bytes(url: str, *, max_bytes: int, headers: Optional[dict] = None, retries: int = 1) -> Optional[bytes]:
+    """Binary GET (e.g. a repository archive) with the same egress, redirect and size controls."""
+    return _request("GET", url, body=None, headers=headers, max_bytes=max_bytes, retries=retries, parse=lambda b: b)

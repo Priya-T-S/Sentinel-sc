@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, FileArchive, Loader2, Play, Square, UploadCloud, XCircle } from 'lucide-react'
+import { CheckCircle2, CircleDashed, FileArchive, GitBranch, GitPullRequest, Loader2, Play, Square, UploadCloud, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { api } from '../api'
 import { PageHeader } from '../components/Layout'
@@ -6,6 +6,8 @@ import { Callout, Card, ErrorState, fmtDate } from '../components/ui'
 import { useRouter } from '../router'
 import { useScan } from '../state'
 import type { ScanStatus } from '../types'
+
+const AGENT_LABEL: Record<string, string> = { orchestrator: 'Orchestrator', vuln_intel: 'Vuln intel', package_trust: 'Package trust', reachability: 'Reachability', remediation: 'Remediation', reviewer: 'Reviewer' }
 
 export function ScanPage() {
   const { setScanId, refreshScans, scans, reloadResult } = useScan()
@@ -16,6 +18,8 @@ export function ScanPage() {
   const [offline, setOffline] = useState(false)
   const [drag, setDrag] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [ghUrl, setGhUrl] = useState('')
+  const [ghRef, setGhRef] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   // resume a running scan after navigation
@@ -78,11 +82,35 @@ export function ScanPage() {
               <button className="btn-primary text-base px-5 py-2.5" disabled={busy || !!running} onClick={() => start(() => api.post(`/api/demo/scan?offline=${offline}`))}>
                 <Play size={17} /> Scan demo project
               </button>
+              <button className="btn-ghost" disabled={busy || !!running} onClick={async () => {
+                setError(null); setBusy(true)
+                try {
+                  const r = await api.post<{ base_scan_id: string; head_scan_id: string }>(`/api/demo/pr-review?offline=${offline}`)
+                  await refreshScans()
+                  navigate(`/history?base=${r.base_scan_id}&head=${r.head_scan_id}`)
+                } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
+              }}><GitPullRequest size={16} /> Run PR-review demo</button>
               <label className="flex items-center gap-2 text-sm text-ink-300 cursor-pointer">
                 <input type="checkbox" className="accent-sky-400 h-4 w-4" checked={offline} onChange={(e) => setOffline(e.target.checked)} />
                 Offline mode (use cached / versioned fixture intelligence only)
               </label>
             </div>
+          </Card>
+
+          <Card title={<span className="flex items-center gap-2"><GitBranch size={15} /> Scan a public GitHub repository</span>}
+            subtitle="Paste a repository link. The exact commit is resolved and its archive downloaded safely — nothing is cloned, installed or run.">
+            <form className="flex flex-wrap items-end gap-3" onSubmit={(e) => {
+              e.preventDefault()
+              if (!ghUrl.trim()) return
+              start(() => api.post('/api/scans/github', { url: ghUrl.trim(), ref: ghRef.trim() || null, offline }))
+            }}>
+              <label className="grid gap-1 flex-1 min-w-[16rem]"><span className="label">Repository URL</span>
+                <input className="input" placeholder="https://github.com/owner/repo" value={ghUrl} onChange={(e) => setGhUrl(e.target.value)} aria-label="GitHub repository URL" /></label>
+              <label className="grid gap-1 w-44"><span className="label">Branch / tag / commit (optional)</span>
+                <input className="input" placeholder="default branch" value={ghRef} onChange={(e) => setGhRef(e.target.value)} aria-label="Branch, tag or commit" /></label>
+              <button type="submit" className="btn-primary" disabled={busy || !!running || !ghUrl.trim()}><GitBranch size={15} /> Scan repository</button>
+            </form>
+            <p className="text-xs text-ink-400 mt-2">Public github.com repositories only · archive limit 50 MB · GitHub allows 60 anonymous lookups per hour · not available in offline mode.</p>
           </Card>
 
           <Card title="Upload">
@@ -120,8 +148,9 @@ export function ScanPage() {
               <ol className="space-y-1.5" aria-live="polite">
                 {stages.map((st) => (
                   <li key={st.key} className="flex items-center gap-2.5 text-sm">
-                    {st.status === 'done' ? <CheckCircle2 size={15} className="text-ok" /> : st.status === 'running' ? <Loader2 size={15} className="text-accent animate-spin" /> : <CircleDashed size={15} className="text-ink-500" />}
+                    {st.status === 'skipped' ? <CircleDashed size={15} className="text-ink-500" /> : st.status === 'done' ? <CheckCircle2 size={15} className="text-ok" /> : st.status === 'running' ? <Loader2 size={15} className="text-accent animate-spin" /> : <CircleDashed size={15} className="text-ink-500" />}
                     <span className={st.status === 'pending' ? 'text-ink-500' : 'text-ink-100'}>{st.label}</span>
+                    {st.agent && <span className="chip bg-ink-750 text-ink-300">{AGENT_LABEL[st.agent] || st.agent}</span>}
                     {st.detail && <span className="text-xs text-ink-400 truncate">— {st.detail}</span>}
                   </li>
                 ))}

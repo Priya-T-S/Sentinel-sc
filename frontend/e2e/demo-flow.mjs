@@ -20,7 +20,12 @@ const browser = await chromium.launch({ channel, headless: true })
 const ctx = await browser.newContext({ viewport: { width: 1500, height: 950 }, acceptDownloads: true })
 const page = await ctx.newPage()
 const consoleErrors = []
-page.on('console', (m) => { if (m.type() === 'error') consoleErrors.push(m.text()) })
+let expectBadRequest = 0  // deliberate 400s from negative tests
+page.on('console', (m) => {
+  if (m.type() !== 'error') return
+  if (expectBadRequest > 0 && m.text().includes('status of 400')) { expectBadRequest--; return }
+  consoleErrors.push(m.text())
+})
 page.on('pageerror', (e) => consoleErrors.push(String(e)))
 
 try {
@@ -99,6 +104,51 @@ try {
   const pk = await page.locator('main').innerText()
   check('Package intel: synthetic typosquat shows signals', pk.includes('Name resembles popular package') && pk.includes('Explicit uncertainty'))
   await shot(page, '08-package-intel')
+  // Feature: multi-agent orchestration + independent reviewer
+  await page.goto(`${BASE}/agents`)
+  await page.getByText('Execution plan').waitFor()
+  const ag = (await page.locator('main').innerText()).toLowerCase()
+  check('Agents: plan shows parallel step and all six roles', ag.includes('step 1 · parallel') && ['vulnerability intelligence', 'package trust', 'reachability analysis', 'remediation', 'independent security reviewer', 'orchestrator'].every((t) => ag.includes(t)))
+  check('Agents: reviewer verdict and checks are shown', /approved/.test(ag) && ag.includes('pass 1') && ag.includes('pass 2'))
+  check('Agents: AI explanations clearly off without opt-in', ag.includes('ai explanations (optional)') && /turned off/.test(ag))
+  await shot(page, '15-agents')
+
+  // Feature: verified build provenance (dayjs publishes Sigstore-signed SLSA provenance)
+  const pkgs = await (await page.request.get(`${BASE}/api/scans/${scanId}/packages?q=dayjs`)).json()
+  const dayjs = pkgs.items.find((x) => x.name === 'dayjs')
+  await page.goto(`${BASE}/package?id=${encodeURIComponent(dayjs.id)}`)
+  await page.getByText(/Build provenance — /).waitFor({ timeout: 15000 })
+  const pv = await page.locator('main').innerText()
+  check('Provenance: dayjs shows cryptographically verified build provenance', pv.includes('cryptographically verified') && pv.includes('Rekor entry #'))
+  await shot(page, '12-provenance')
+
+  // Feature: GitHub URL scanning - hostile / invalid URLs are rejected with a clear message
+  await page.goto(`${BASE}/scan`)
+  await page.getByLabel('GitHub repository URL').fill('https://169.254.169.254/latest/meta-data')
+  expectBadRequest = 1
+  await page.getByRole('button', { name: 'Scan repository' }).click()
+  await page.getByRole('alert').filter({ hasText: /github\.com/i }).first().waitFor({ timeout: 10000 })
+  const errText = await page.locator('[role="alert"]').first().innerText().catch(() => '')
+  check('GitHub URL: non-GitHub URL rejected with a clear message', /github\.com/i.test(errText) || offline, errText.split('\n').slice(-1)[0])
+  if (!offline && process.env.E2E_GITHUB !== '0') {
+    await page.getByLabel('GitHub repository URL').fill('https://github.com/expressjs/cors')
+    await page.getByRole('button', { name: 'Scan repository' }).click()
+    await page.getByRole('button', { name: 'View results' }).waitFor({ timeout: 300000 })
+    await page.getByRole('button', { name: 'View results' }).click()
+    await page.getByRole('heading', { name: 'Security posture' }).waitFor()
+    const sub = await page.locator('main').innerText()
+    check('GitHub URL: public repo scanned at an exact commit', sub.includes('expressjs/cors @') && /\([0-9a-f]{12}\)/.test(sub))
+    await shot(page, '13-github-scan')
+  }
+
+  // Feature: pull-request dependency review demo
+  await page.goto(`${BASE}/scan`)
+  await page.getByRole('button', { name: /Run PR-review demo/ }).click()
+  await page.getByText(/Pull-request style review/).waitFor({ timeout: 300000 })
+  const hist = await page.locator('main').innerText()
+  check('PR review: risky PR fails and shows what it introduced', hist.includes('FAIL') && /typosquat/i.test(hist) && /downgrade/i.test(hist))
+  await shot(page, '14-pr-review')
+
   await page.goto(`${BASE}/history`)
   await page.getByText('History & risk regression').waitFor()
   await shot(page, '09-history')

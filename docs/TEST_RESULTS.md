@@ -1,23 +1,29 @@
 # Test results
 
-Recorded 2026-10-12 on Windows 11, Python 3.12.3, Node 24.21.0, Microsoft Edge (headless) via playwright-core 1.63.0.
+Last updated 2026-10-15 (after adding GitHub URL scanning, PR dependency review and Sigstore provenance verification).
+Recorded on Windows 11, Python 3.12.3, Node 24.21.0, Microsoft Edge (headless) via playwright-core 1.63.0.
 All runs below are from a clean data directory.
 
 ## Final run
 
 | Suite | Command | Result |
 |---|---|---|
-| Backend unit, functional, security, API | `cd backend && python -m pytest tests -q` | **126 passed, 1 skipped** (symlink test skipped: creating symlinks on Windows needs admin rights; the control is still active) |
+| Backend unit, functional, security, API | `cd backend && python -m pytest tests -q` | **191 passed, 1 skipped** (symlink test skipped: creating symlinks on Windows needs admin rights; the control is still active) |
 | Frontend type-check + build | `cd frontend && npm run build` | **pass** (290 KB JS / 85 KB gzip) |
-| End-to-end judging flow, live intelligence | `npm run e2e` (server on :8000) | **20/20 checks passed** |
-| End-to-end judging flow, offline/fixture | `npm run e2e:offline` | **20/20 checks passed** |
+| End-to-end judging flow, live intelligence | `npm run e2e` (server on :8000) | **27/27 checks passed** (incl. a real GitHub repo scan and the Agents page) |
+| End-to-end judging flow, offline/fixture | `npm run e2e:offline` | **26/26 checks passed** (live GitHub scan skipped offline) |
+| Multi-agent refactor regression | full suite immediately after moving the engine into agents | identical: 179/179 passed |
+| AI explainer | stand-in client returning SDK-shaped responses (no API key on this machine) | guard, refusal, error, privacy and no-influence tests pass; **not tested against the live Anthropic API** |
 | Detector's Python dependencies | `pip-audit -r backend/requirements.txt` | **No known vulnerabilities found** |
 | Detector's npm dependencies | `npm audit` | **found 0 vulnerabilities** |
 | CLI gate on demo (live) | `python -m sentinel scan ../demo/demo-app` | FAIL verdict, exit **1** (expected: 2 critical vulns + pwn-request workflow) |
 | CLI gate on a clean project | lockfile with `dayjs@1.11.13` | PASS, exit **0** |
 | CLI gate with no intelligence | `--offline` with an empty cache | FAIL (`fail_on_intelligence_unavailable`), exit **1** — never a false clean |
 | CLI missing target | `scan /nonexistent` | exit **2** |
-| Own CI workflow self-scan | `scan_workflows` on this repo | no findings |
+| Own CI workflows self-scan (gate + PR review) | `scan_workflows` on this repo | no findings |
+| GitHub URL scan of a real repo | `scan https://github.com/expressjs/express/tree/4.17.1` | resolved to commit `e1b45eb…`, scanned, commit recorded |
+| PR review on the demo | `review --base demo/pr-review/base --head demo/pr-review/head` | FAIL, exit 1 (typosquat, downgrade, new axios/lodash vulns); base vs base → PASS, exit 0 |
+| Provenance on real packages | scan of `demo/pr-review/base` | 4 verified (express 4.22.3, body-parser 1.20.8, dayjs 1.11.23, proxy-addr 2.0.8), 66 publish none |
 | Server log during E2E | grep traceback/error | 0 matches |
 
 E2E checks: demo loads → real stages shown → overview shows verified vulnerabilities → selecting `qs` highlights
@@ -32,7 +38,13 @@ inputs), `test_engine_demo.py` (expected findings, clean control, paths, alias m
 heuristics labelling, verified remediation, what-if, deterministic policy, SBOM export/round-trip, no false clean),
 `test_security.py` (archive traversal/symlink/bomb, XXE, YAML tags, deep JSON, injection payloads, no subprocess,
 SSRF/egress allow-list, redirect revalidation, oversized/malformed responses, XSS escaping, secret redaction,
-workflow risks), `test_api.py` (full flow, upload, dedupe, compare, policy, CSRF, Host/DNS-rebinding, headers,
+workflow risks), `test_github.py` (URL parsing incl. hostile inputs, commit resolution, private/missing repos,
+rate limits, redirects to internal hosts, size cap, hostile archive contents, API endpoint), `test_review.py` (what a risky PR
+introduces, unchanged PR passes, removing risk passes, old debt doesn't block, custom policy, markdown injection safety, API),
+`test_agents.py` (orchestration trace, real parallelism of the two step-1 agents, reviewer approval on the demo,
+each reviewer downgrade rule, never-upgrade, conflict detection, inconsistent-report rejection, AI off by default, AI guard
+and no-influence, code-snippet opt-in, refusal/error handling, credential/offline gating), `test_provenance.py` (real express attestation verifies offline; tampered statement, wrong repository claim, artifact hash
+mismatch, registry repo mismatch, missing/malformed attestations; engine integration), `test_api.py` (full flow, upload, dedupe, compare, policy, CSRF, Host/DNS-rebinding, headers,
 CORS, upload rejections, size limit, ID injection, SQL injection, SPA traversal, what-if validation, rate limit,
 security events).
 
@@ -50,6 +62,9 @@ security events).
 | `test_security.py` | archive normaliser stripped a lone `.github/` top folder, hiding workflows | dot-directories never stripped |
 | E2E (390 px) | Overview overflowed 833 px horizontally; Settings tabs overflowed | `min-w-0` on cards, scrollable tab bar |
 | Workflow SHA verification against GitHub | upload-artifact SHA had a one-character typo | corrected to the verified SHA |
+| Real-browser E2E | Overview label showed `expressjs/cors @ master (commit)`, my test looked for a different label; console check failed on the deliberate 400 from the hostile-URL test | test fixed to match the real label; only that one expected 400 is excluded |
+| Test run | PR-comment markdown test expected no `<img` at all; the code escapes it as `\<img` (inert text) | test now checks for *unescaped* tags/links |
+| Manual review of first PR-review output | verdict was only WARN for a PR adding 14 high vulns and a typosquat; comment listed 25 near-identical axios rows | stricter review default for new risk; comment grouped per package with details collapsed |
 | npm audit / pip-audit | initial pins (vite 5.4.11, react-router 6.28, tailwind 3, starlette 0.41, python-multipart 0.0.20) had advisories | upgraded to patched releases ≥2 weeks old; react-router removed |
 
 ## Not tested / known gaps

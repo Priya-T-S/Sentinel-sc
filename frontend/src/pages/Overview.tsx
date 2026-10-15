@@ -26,10 +26,13 @@ export function OverviewPage() {
     <div className="fade-in">
       <PageHeader
         title="Security posture"
-        subtitle={<>{r.scan.source_name} · scanned {fmtDate(r.scan.finished_at)} in {r.scan.duration_seconds}s · engine {r.scan.engine_version}</>}
+        subtitle={<>{r.scan.source_name}
+          {r.scan.source?.type === 'github' && <> @ <a className="link mono" href={r.scan.source.commit_url} target="_blank" rel="noopener noreferrer">{r.scan.source.resolved_ref} ({r.scan.source.commit.slice(0, 12)})</a></>}
+          {' '}· scanned {fmtDate(r.scan.finished_at)} in {r.scan.duration_seconds}s · engine {r.scan.engine_version}</>}
         actions={<>
           <a className="btn-ghost" href={`/api/scans/${scanId}/export/html`}><Download size={15} /> HTML report</a>
           <a className="btn-ghost" href={`/api/scans/${scanId}/export/json`}><Download size={15} /> JSON</a>
+          {r.review && <Link to="/agents" className={`chip ${r.review.verdict === 'approved' ? 'bg-ok/10 text-ok' : r.review.verdict === 'rejected' ? 'bg-bad/10 text-bad' : 'bg-warn/10 text-warn'}`} title="Independent Security Reviewer verdict">Reviewer: {r.review.verdict.replace(/_/g, ' ')}</Link>}
           <Link className="btn-primary" to="/findings">Explore findings</Link>
         </>}
       />
@@ -71,6 +74,8 @@ export function OverviewPage() {
               <div className="label mb-1">Fixability</div>
               <div className="text-sm text-ink-200"><b className="text-ink-100 tabular-nums">{s.fixable}</b> package(s) with a fix</div>
               <div className="text-sm text-ink-200"><b className="text-ok tabular-nums">{s.fix_verified}</b> fix verified clean by OSV</div>
+              {s.provenance && <div className="text-sm text-ink-200 mt-1"><b className="text-ok tabular-nums">{s.provenance.verified}</b> with verified build provenance
+                {(s.provenance.invalid + s.provenance.repo_mismatch) > 0 && <b className="text-bad"> · {s.provenance.invalid + s.provenance.repo_mismatch} failed</b>}</div>}
               <Link to="/remediation" className="link text-xs mt-1 inline-block">Remediation center →</Link>
             </div>
             <div>

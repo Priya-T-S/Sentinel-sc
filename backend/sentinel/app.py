@@ -11,7 +11,6 @@ Security controls (see docs/THREAT_MODEL.md):
 """
 from __future__ import annotations
 
-import io
 import json
 import logging
 import os
@@ -19,7 +18,6 @@ import re
 import threading
 import time
 import uuid
-import zipfile
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from typing import Any, Optional
@@ -29,8 +27,11 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 from pydantic import BaseModel, Field
 
 from . import __version__, db, engine, policy, report, sbom, scoring
+from . import review as review_mod
 from .config import DEMO_APP_DIR, FIXTURE_DIR, FRONTEND_DIST, LIMITS
 from .intel import load_fixture
+from .agents import AGENTS
+from .github import GitHubImportError, fetch_repository, parse_github_url
 from .jobs import JobManager, QueueFull
 from .models import SEVERITY_ORDER
 from .parsers import COVERAGE, is_cyclonedx_name
@@ -172,7 +173,8 @@ def health():
 
 @app.get("/api/meta")
 def meta():
-    return {"version": __version__, "coverage": COVERAGE, "stages": [{"key": k, "label": l} for k, l, _ in engine.STAGES],
+    return {"version": __version__, "coverage": COVERAGE, "stages": [{"key": k, "label": l, "agent": a} for k, l, _, a in engine.STAGES],
+            "agents": AGENTS,
             "limits": {k: getattr(LIMITS, k) for k in LIMITS.__dataclass_fields__},
             "scoring": {"doc": scoring.__doc__, "reachability_weights": scoring.REACH_W, "scope_weights": scoring.SCOPE_W,
                         "severity_bands": scoring.SEV_BAND, "heuristic_bands": scoring.HEUR_BAND},
@@ -211,7 +213,7 @@ async def create_scan(file: UploadFile = File(...), offline: bool = Form(False))
         except UnsafeInputError as exc:
             db.log_event("upload_rejected", str(exc)[:120])
             raise HTTPException(400, str(exc))
-        make = lambda: ZipSource(data, name)
+        make = lambda *_: ZipSource(data, name)
         kind = "archive"
     elif name in MANIFEST_NAMES or is_cyclonedx_name(name) or re.match(r"^(requirements|constraints).*\.txt$", low) \
             or low.endswith(".csproj"):
@@ -219,7 +221,7 @@ async def create_scan(file: UploadFile = File(...), offline: bool = Form(False))
             SingleFileSource(name, data)
         except UnsafeInputError as exc:
             raise HTTPException(400, str(exc))
-        make = lambda: SingleFileSource(name, data)
+        make = lambda *_: SingleFileSource(name, data)
         kind = "sbom" if is_cyclonedx_name(name) else "manifest"
     elif low.endswith(".json"):
         # any JSON: accept only if it is CycloneDX
@@ -229,7 +231,7 @@ async def create_scan(file: UploadFile = File(...), offline: bool = Form(False))
             raise HTTPException(400, "Unsupported file: JSON is not valid.")
         if not isinstance(doc, dict) or doc.get("bomFormat") != "CycloneDX":
             raise HTTPException(400, "Unsupported JSON file. Upload a CycloneDX SBOM, a lockfile, or a .zip of the repository.")
-        make = lambda: SingleFileSource("sbom.cdx.json", data)
+        make = lambda *_: SingleFileSource("sbom.cdx.json", data)
         kind = "sbom"
     else:
         raise HTTPException(400, "Unsupported file type. Upload a .zip of the repository, a supported lockfile/manifest, or a CycloneDX JSON SBOM.")
@@ -240,17 +242,67 @@ async def create_scan(file: UploadFile = File(...), offline: bool = Form(False))
     return {"scan_id": scan_id, "deduplicated": dedup}
 
 
+class GitHubScan(BaseModel):
+    url: str = Field(..., max_length=400)
+    ref: Optional[str] = Field(default=None, max_length=200)
+    offline: bool = False
+
+
+@app.post("/api/scans/github")
+def create_github_scan(body: GitHubScan):
+    """Scan a PUBLIC GitHub repository by URL. The archive of an exact commit is downloaded with the hardened client."""
+    try:
+        ref = parse_github_url(body.url)
+        if body.ref:
+            ref = parse_github_url(f"{ref.owner}/{ref.repo}@{body.ref.strip()}")
+    except GitHubImportError as exc:
+        db.log_event("github_url_rejected", "invalid or non-GitHub repository URL")
+        raise HTTPException(400, str(exc))
+    if body.offline or db.get_settings().get("offline_mode"):
+        raise HTTPException(409, "Offline mode is on: scanning a GitHub URL needs network access. Turn offline mode off, "
+                                 "or download the repository ZIP and upload it.")
+
+    def make(progress=None):
+        src, _meta = fetch_repository(ref, progress)
+        return src
+    try:
+        scan_id, dedup = jobs.submit(make, source_name=f"github.com/{ref.slug}" + (f"@{ref.ref}" if ref.ref else ""),
+                                     source_kind="github", content_key=f"github:{ref.slug}@{ref.ref or ''}".encode(),
+                                     offline=False)
+    except QueueFull as exc:
+        raise HTTPException(429, str(exc))
+    return {"scan_id": scan_id, "deduplicated": dedup, "repository": ref.slug, "ref": ref.ref}
+
+
 @app.post("/api/demo/scan")
 def demo_scan(offline: bool = Query(False)):
     if not DEMO_APP_DIR.is_dir():
         raise HTTPException(404, "Demo project not found.")
     key = b"demo:" + str(sorted((p.name, p.stat().st_mtime) for p in DEMO_APP_DIR.rglob("*") if p.is_file())).encode()
     try:
-        scan_id, dedup = jobs.submit(lambda: DirSource(str(DEMO_APP_DIR)), source_name="demo/acme-orders-api",
+        scan_id, dedup = jobs.submit(lambda *_: DirSource(str(DEMO_APP_DIR)), source_name="demo/acme-orders-api",
                                      source_kind="demo", content_key=key, offline=offline, is_demo=True)
     except QueueFull as exc:
         raise HTTPException(429, str(exc))
     return {"scan_id": scan_id, "deduplicated": dedup}
+
+
+@app.post("/api/demo/pr-review")
+def demo_pr_review(offline: bool = Query(False)):
+    """Scan the PR-review demo: base (main branch) and head (a risky pull request)."""
+    from .config import DEMO_DIR
+    ids = {}
+    for sub in ("base", "head"):
+        d = DEMO_DIR / "pr-review" / sub
+        if not d.is_dir():
+            raise HTTPException(404, "PR-review demo not found.")
+        key = f"demo-pr:{sub}:".encode() + str(sorted((p.name, p.stat().st_mtime) for p in d.rglob("*") if p.is_file())).encode()
+        try:
+            ids[sub], _ = jobs.submit(lambda *_, d=d: DirSource(str(d)), source_name=f"demo/pr-review ({'main' if sub == 'base' else 'pull request'})",
+                                      source_kind="demo", content_key=key, offline=offline, is_demo=True)
+        except QueueFull as exc:
+            raise HTTPException(429, str(exc))
+    return {"base_scan_id": ids["base"], "head_scan_id": ids["head"]}
 
 
 @app.post("/api/demo/reset")
@@ -530,6 +582,16 @@ def compare(base_id: str, head_id: str):
     }
 
 
+@app.get("/api/compare/{base_id}/{head_id}/review")
+def compare_review(base_id: str, head_id: str, format: str = Query("json", pattern="^(json|markdown)$")):
+    """PR-style dependency review of head vs base: only risk the change introduces is gated."""
+    rv = review_mod.review(_result(base_id), _result(head_id))
+    if format == "markdown":
+        return PlainTextResponse(review_mod.to_markdown(rv), media_type="text/markdown",
+                                 headers={"Content-Disposition": f'attachment; filename="sentinel-review-{base_id}-{head_id}.md"'})
+    return rv | {"markdown": review_mod.to_markdown(rv)}
+
+
 # --------------------------------------------------------------------------- policy & settings
 
 @app.get("/api/policy")
@@ -563,12 +625,17 @@ class SettingsBody(BaseModel):
     enable_registry_metadata: Optional[bool] = None
     enable_scorecard: Optional[bool] = None
     enable_epss_kev: Optional[bool] = None
+    ai_assistance: Optional[bool] = None
+    ai_share_code_snippets: Optional[bool] = None
 
 
 @app.get("/api/settings")
 def get_settings():
     s = db.get_settings()
     s.pop("policy", None)
+    # whether a credential is configured (never the credential itself)
+    s["ai_credential_configured"] = bool(os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")
+                                         or os.environ.get("ANTHROPIC_PROFILE"))
     return s
 
 

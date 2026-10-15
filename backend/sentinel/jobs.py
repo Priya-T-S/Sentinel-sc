@@ -63,7 +63,12 @@ class JobManager:
         timer.daemon = True
         timer.start()
         try:
-            src = make_source()
+            def fetch_progress(msg: str):
+                if cancel.is_set():
+                    raise engine.ScanCancelled()
+                job["progress"] = {"percent": 0, "stage": "fetch", "elapsed": 0,
+                                   "stages": [{"key": "fetch", "label": "Fetching source", "status": "running", "detail": msg}]}
+            src = make_source(fetch_progress)
 
             def on_progress(p):
                 job["progress"] = p
@@ -83,7 +88,7 @@ class JobManager:
         except Exception as exc:  # never leak internals to clients
             ref = uuid.uuid4().hex[:8]
             log.exception("scan %s failed (ref %s)", scan_id, ref)
-            msg = str(exc) if exc.__class__.__name__ in ("UnsafeInputError", "ManifestError") else f"Internal scan error (ref {ref})."
+            msg = str(exc) if exc.__class__.__name__ in ("UnsafeInputError", "ManifestError", "GitHubImportError")                 else f"Internal scan error (ref {ref})."
             job["status"] = "failed"
             db.scan_update(scan_id, status="failed", finished_at=time.time(), error=msg)
             db.log_event("scan_failed", f"scan={scan_id} ref={ref} type={exc.__class__.__name__}")

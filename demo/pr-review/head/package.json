@@ -1,0 +1,13 @@
+{
+  "name": "acme-orders-api",
+  "version": "1.6.0",
+  "private": true,
+  "description": "SENTINEL-SC PR-review demo: a pull request that adds an HTTP client, 'pins' lodash back and adds a look-alike package. Intentionally risky. DO NOT DEPLOY.",
+  "dependencies": {
+    "express": "4.22.3",
+    "lodash": "4.17.15",
+    "dayjs": "^1.11.10",
+    "axios": "0.21.1",
+    "lodahs": "file:./vendor/lodahs"
+  }
+}

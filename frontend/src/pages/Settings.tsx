@@ -151,6 +151,10 @@ function PrivacyTab() {
           {toggle('enable_registry_metadata', 'Registry metadata (npm, PyPI)', 'Sends package names to fetch publish dates, maintainers, scripts and provenance metadata.')}
           {toggle('enable_scorecard', 'OpenSSF Scorecard', 'Sends public GitHub repository paths of direct dependencies.')}
           {toggle('enable_epss_kev', 'CISA KEV & FIRST EPSS', 'Downloads the KEV catalog; sends CVE identifiers to EPSS.')}
+          <div className="border-t border-ink-700 pt-4 space-y-4">
+            {toggle('ai_assistance', 'AI explanations (Claude, optional)', `Off by default. Sends evidence for the top findings (package names/versions, advisory text, paths, reachability levels, fix candidates) to Anthropic to get plain-language explanations. Never changes findings, scores or the verdict. ${s.ai_credential_configured ? 'Credential detected on the server.' : 'No ANTHROPIC_API_KEY on the server — this has no effect until one is set.'}`)}
+            {toggle('ai_share_code_snippets', 'Include call-site code lines in AI requests', 'Off: only file names and line numbers are sent. On: the single source line of each cited call site is included.')}
+          </div>
           <Callout tone="ok">Vulnerability matching (OSV) sends only ecosystem, package name and exact version. Source code, secrets and file contents never leave this machine.</Callout>
         </div>
       </Card>

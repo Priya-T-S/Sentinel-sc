@@ -1,0 +1,136 @@
+# SENTINEL-SC pull-request dependency review.
+#
+# On every pull request it scans the base branch and the PR, then comments with ONLY the supply-chain
+# risk the PR introduces (new vulnerable packages, typosquats, install scripts, downgrades, ...) and
+# fails the check when the review policy is violated.
+#
+# Security design:
+#   * Trigger is `pull_request` (not `pull_request_target`): fork PRs get a read-only token and no secrets.
+#   * The scanner is checked out from a TRUSTED ref (`sentinel-ref`, default: this repo's base branch),
+#     never from the PR, so a PR cannot modify the tool that judges it.
+#   * The PR's code is only read as text. Nothing from it is installed or executed.
+#   * Third-party actions are pinned to commit SHAs verified against their release tags.
+#   * The PR comment is posted with `gh`, using values passed via env (no ${{ }} interpolation in shell).
+#
+# Use from another repository:
+#   jobs:
+#     deps:
+#       uses: Priya-T-S/Sentinel-sc/.github/workflows/sentinel-pr-review.yml@<commit-sha>
+#       with:
+#         scan-path: .
+#         sentinel-repo: Priya-T-S/Sentinel-sc
+#         sentinel-ref: <commit-sha>
+name: sentinel-pr-review
+on:
+  pull_request:
+    paths:
+      - "**/package.json"
+      - "**/package-lock.json"
+      - "**/npm-shrinkwrap.json"
+      - "**/yarn.lock"
+      - "**/pnpm-lock.yaml"
+      - "**/requirements*.txt"
+      - "**/poetry.lock"
+      - "**/Pipfile.lock"
+      - "**/pyproject.toml"
+      - "**/go.mod"
+      - "**/go.sum"
+      - "**/Cargo.lock"
+      - "**/pom.xml"
+      - "**/gradle.lockfile"
+      - "**/packages.lock.json"
+      - ".github/workflows/**"
+  workflow_call:
+    inputs:
+      scan-path:
+        type: string
+        default: "."
+      sentinel-repo:
+        description: Repository that contains SENTINEL-SC
+        type: string
+        default: "Priya-T-S/Sentinel-sc"
+      sentinel-ref:
+        description: Trusted ref (preferably a commit SHA) of SENTINEL-SC
+        type: string
+        default: "main"
+      policy-file:
+        type: string
+        default: ""
+permissions:
+  contents: read
+  pull-requests: write
+concurrency:
+  group: sentinel-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SCAN_PATH: ${{ inputs.scan-path || '.' }}
+      POLICY_FILE: ${{ inputs.policy-file }}
+    steps:
+      - name: Check out the scanner (trusted ref, not the PR)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: ${{ inputs.sentinel-repo || github.repository }}
+          ref: ${{ inputs.sentinel-ref || github.event.pull_request.base.sha }}
+          path: sentinel-tool
+          persist-credentials: false
+      - name: Check out base branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+          persist-credentials: false
+      - name: Check out pull request
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: head
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+      - name: Install scanner dependencies (pinned)
+        run: python -m pip install --disable-pip-version-check -r sentinel-tool/backend/requirements.txt
+      - name: Dependency review
+        id: review
+        working-directory: sentinel-tool/backend
+        run: |
+          set +e
+          ARGS=(review --base "$GITHUB_WORKSPACE/base/$SCAN_PATH" --head "$GITHUB_WORKSPACE/head/$SCAN_PATH" \
+                --markdown "$RUNNER_TEMP/review.md" --json "$RUNNER_TEMP/review.json" --quiet)
+          if [ -n "$POLICY_FILE" ]; then ARGS+=(--policy "$GITHUB_WORKSPACE/base/$POLICY_FILE"); fi
+          python -m sentinel "${ARGS[@]}"
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+      - name: Job summary
+        if: always()
+        run: cat "$RUNNER_TEMP/review.md" >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+      - name: Post or update PR comment
+        if: always() && github.event.pull_request.number
+        continue-on-error: true   # fork PRs have a read-only token; the job summary still shows the review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          [ -f "$RUNNER_TEMP/review.md" ] || exit 0
+          gh pr comment "$PR_NUMBER" --repo "$REPO" --edit-last --body-file "$RUNNER_TEMP/review.md" \
+            || gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file "$RUNNER_TEMP/review.md"
+      - name: Upload review
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: sentinel-pr-review
+          path: |
+            ${{ runner.temp }}/review.md
+            ${{ runner.temp }}/review.json
+      - name: Enforce review verdict
+        env:
+          CODE: ${{ steps.review.outputs.exit_code }}
+        run: |
+          if [ "$CODE" = "1" ]; then echo "SENTINEL-SC: this PR introduces supply-chain risk that violates the review policy."; exit 1; fi
+          if [ "$CODE" = "2" ]; then echo "SENTINEL-SC: review could not run."; exit 1; fi
+          echo "SENTINEL-SC: no blocking risk introduced."

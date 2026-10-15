@@ -19,7 +19,8 @@ DEFAULT_POLICY = {
     "fail_on_known_exploited": True,                 # any verified vuln listed in CISA KEV fails
     "warn_on_vulnerability_severity": "medium",
     "warn_on_signal_severity": "medium",             # heuristic / integrity / CI / secret findings
-    "fail_on_signal_kinds": ["ci_pwn_request", "secret_private_key", "integrity_mismatch", "scope_registry_mismatch"],
+    "fail_on_signal_kinds": ["ci_pwn_request", "secret_private_key", "integrity_mismatch", "scope_registry_mismatch",
+                             "provenance_invalid"],
     "require_lockfile": True,                        # missing lockfile -> warn (or fail if strict_lockfile)
     "strict_lockfile": False,
     "flag_unpinned": True,

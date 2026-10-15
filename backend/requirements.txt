@@ -8,3 +8,7 @@ packaging==24.2
 python-multipart==0.0.32
 PyYAML==6.0.3
 defusedxml==0.7.1
+# npm provenance verification (Sigstore: signatures, Fulcio certificates, Rekor transparency log)
+sigstore==4.5.0
+# optional: AI explanations (off by default; needs ANTHROPIC_API_KEY)
+anthropic==1.9.0

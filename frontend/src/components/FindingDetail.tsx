@@ -1,4 +1,4 @@
-import { AlertOctagon, CheckCircle2, CircleHelp, FileCode2, Link2, Scale, ShieldAlert, Wrench } from 'lucide-react'
+import { AlertOctagon, CheckCircle2, CircleHelp, FileCode2, Link2, Scale, ShieldAlert, ShieldCheck, Sparkles, Wrench } from 'lucide-react'
 import { useState } from 'react'
 import { useApi } from '../hooks'
 import { Link } from '../router'
@@ -157,6 +157,28 @@ export function FindingDetail({ findingId }: { findingId: string }) {
           {f.reachability.symbols_considered && f.reachability.symbols_considered.length > 0 && (
             <p className="text-[11px] text-ink-500 mt-1">Symbols considered ({f.reachability.symbol_source}): {f.reachability.symbols_considered.join(', ')}</p>
           )}
+        </Section>
+      )}
+
+      {f.review && (
+        <Section icon={<ShieldCheck size={16} />} title="Independent reviewer">
+          {f.review.status === 'confirmed' ? <p className="text-sm text-ok">Confirmed: every claim on this finding is supported by its evidence.</p> : (
+            <ul className="text-sm space-y-1">{f.review.corrections.map((c, i) => (
+              <li key={i} className="text-warn">Corrected: {String(c.before)} → {String(c.after)} — <span className="text-ink-300">{c.reason}</span></li>))}</ul>
+          )}
+        </Section>
+      )}
+
+      {f.ai_explanation && (
+        <Section icon={<Sparkles size={16} />} title="AI explanation">
+          <div className="rounded-lg border border-fuchsia-400/30 bg-fuchsia-400/5 p-3">
+            <div className="text-[11px] text-fuchsia-200 mb-1.5">{f.ai_explanation.label} · {f.ai_explanation.model}</div>
+            <p className="text-sm text-ink-100">{f.ai_explanation.plain_explanation}</p>
+            {f.ai_explanation.why_it_matters_here && <p className="text-sm text-ink-300 mt-1.5"><b className="text-ink-200">Why it matters here:</b> {f.ai_explanation.why_it_matters_here}</p>}
+            {f.ai_explanation.investigation_steps.length > 0 && (
+              <ol className="list-decimal pl-5 text-sm text-ink-200 mt-2 space-y-0.5">{f.ai_explanation.investigation_steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
+            )}
+          </div>
         </Section>
       )}
 

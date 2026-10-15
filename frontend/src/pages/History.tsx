@@ -1,5 +1,5 @@
-import { GitCompare, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { Download, GitCompare, GitPullRequest, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { api } from '../api'
 import { PageHeader } from '../components/Layout'
 import { Card, EmptyState, ErrorState, Loading, SeverityBadge, ago, fmtDate } from '../components/ui'
@@ -17,12 +17,23 @@ interface Compare {
 
 export function HistoryPage() {
   const { scans, refreshScans, setScanId, scanId } = useScan()
-  const { navigate } = useRouter()
-  const [picked, setPicked] = useState<string[]>([])
+  const { navigate, search } = useRouter()
+  const [picked, setPicked] = useState<string[]>(() => [search.get('base'), search.get('head')].filter((x): x is string => !!x))
+  // scans started from the PR demo may still be running: poll until both finish
+  const pending = picked.some((id) => { const s = scans.find((x) => x.id === id); return !s || s.status === 'queued' || s.status === 'running' })
+  useEffect(() => {
+    if (!pending || picked.length < 2) return
+    const t = setInterval(() => { refreshScans() }, 1000)
+    return () => clearInterval(t)
+  }, [pending, picked.length, refreshScans])
   const [err, setErr] = useState<string | null>(null)
   const done = scans.filter((s) => s.status === 'completed')
-  const [base, head] = picked.length === 2 ? [...picked].sort((a, b) => (scans.find((s) => s.id === a)!.created_at - scans.find((s) => s.id === b)!.created_at)) : [null, null]
-  const cmp = useApi<Compare>(base && head ? `/api/compare/${base}/${head}` : null)
+  // older scan = base, newer = head (both demo scans are created in order, so ties keep the given order)
+  const created = (id: string) => scans.find((s) => s.id === id)?.created_at ?? 0
+  const [base, head] = picked.length === 2 ? [...picked].sort((a, b) => created(a) - created(b)) : [null, null]
+  const ready = !pending && base && head
+  const cmp = useApi<Compare>(ready ? `/api/compare/${base}/${head}` : null)
+  const rv = useApi<Review>(ready ? `/api/compare/${base}/${head}/review` : null)
   const toggle = (id: string) => setPicked((p) => p.includes(id) ? p.filter((x) => x !== id) : [...p.slice(-1), id])
   const del = async (id: string) => {
     if (!window.confirm('Delete this scan and its stored results?')) return
@@ -60,8 +71,9 @@ export function HistoryPage() {
 
       {picked.length < 2 ? (
         <div className="card"><EmptyState icon={<GitCompare size={22} />} title="Compare two scans" body={done.length < 2 ? 'Run at least two scans (e.g. before and after applying a fix).' : 'Tick two scans above.'} /></div>
-      ) : cmp.loading ? <Loading label="Comparing" /> : cmp.error ? <ErrorState message={cmp.error} /> : cmp.data && (
+      ) : pending ? <Loading label="Waiting for both scans to finish" /> : cmp.loading ? <Loading label="Comparing" /> : cmp.error ? <ErrorState message={cmp.error} /> : cmp.data && (
         <div className="grid lg:grid-cols-2 gap-4 fade-in">
+          {rv.data && <ReviewCard rv={rv.data} base={base!} head={head!} />}
           <Card title={`Newly introduced (${cmp.data.new_findings.length})`} subtitle={`in ${cmp.data.head.id} vs ${cmp.data.base.id}`}><BriefList items={cmp.data.new_findings} tone="bad" /></Card>
           <Card title={`Resolved / removed (${cmp.data.removed_findings.length})`}><BriefList items={cmp.data.removed_findings} tone="ok" /></Card>
           <Card title={`Changed findings (${cmp.data.changed_findings.length})`} subtitle="Version, severity, priority or evidence changed">
@@ -90,5 +102,35 @@ function BriefList({ items, tone }: { items: Brief[]; tone: 'ok' | 'bad' }) {
       <li key={b.fingerprint} className="flex items-center gap-2 text-sm"><SeverityBadge s={b.severity} />
         <span className={`flex-1 truncate ${tone === 'ok' ? 'text-ink-300' : 'text-ink-100'}`}>{b.title}</span>
         <span className="mono text-[11px] text-ink-400">{b.package}{b.version ? `@${b.version}` : ''}</span></li>))}</ul>
+  )
+}
+
+interface Review {
+  summary: { added: number; removed: number; changed: number; downgrades: number; new_vulnerabilities: number; new_signals: number; resolved: number; attention: number }
+  gate: { verdict: 'pass' | 'warn' | 'fail'; violations: { rule: string; message: string; package?: string }[] }
+  attention: { type: string; package: string | null; version: string | null; detail: string }[]
+}
+
+function ReviewCard({ rv, base, head }: { rv: Review; base: string; head: string }) {
+  const s = rv.summary
+  const tone = rv.gate.verdict === 'fail' ? 'text-bad' : rv.gate.verdict === 'warn' ? 'text-warn' : 'text-ok'
+  return (
+    <Card className="lg:col-span-2" title={<span className="flex items-center gap-2"><GitPullRequest size={15} /> Pull-request style review (older scan = base, newer = head)</span>}
+      subtitle="Gates only on risk the newer version introduces — the same check the CI workflow posts as a PR comment."
+      actions={<a className="btn-ghost" href={`/api/compare/${base}/${head}/review?format=markdown`}><Download size={15} /> PR comment (.md)</a>}>
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <span className={`text-2xl font-semibold uppercase ${tone}`}>{rv.gate.verdict}</span>
+        <span className="text-sm text-ink-300">{s.added} added · {s.changed} changed ({s.downgrades} downgrade{s.downgrades === 1 ? '' : 's'}) · {s.removed} removed</span>
+        <span className="text-sm text-ink-300">{s.new_vulnerabilities} new vulnerabilities · {s.new_signals} new signals · {s.resolved} resolved</span>
+      </div>
+      {rv.attention.length > 0 && (
+        <ul className="mt-3 space-y-1 text-sm">
+          {rv.attention.map((a, i) => (
+            <li key={i} className="text-warn"><span className="chip bg-warn/10 text-warn mr-2">{a.type.replace(/_/g, ' ')}</span>
+              {a.package && <span className="mono text-ink-100">{a.package}{a.version ? `@${a.version}` : ''} </span>}<span className="text-ink-300">{a.detail}</span></li>
+          ))}
+        </ul>
+      )}
+    </Card>
   )
 }

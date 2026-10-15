@@ -29,11 +29,27 @@ silently treated as clean.
 | SBOM | CycloneDX XML, SPDX | Unsupported | | | | |
 | other | `Gemfile.lock`, `composer.lock` | Unsupported | | | | |
 
+## Input sources
+
+| Source | How | Notes |
+|---|---|---|
+| Upload | `.zip` of a repository, a single lockfile/manifest, or a CycloneDX JSON SBOM | read in memory |
+| Local directory | CLI: `python -m sentinel scan ./path` | symlinks never followed |
+| **Public GitHub repository** | Scan page URL box, or CLI `scan https://github.com/owner/repo[/tree/<ref>]` | resolved to an exact commit; public repos only; online only |
+| **Two versions (PR review)** | CLI `review --base … --head …`, History page, PR workflow | any of the inputs above on each side |
+
+## Build provenance verification
+
+| Ecosystem | Verified | Notes |
+|---|---|---|
+| npm | ✔ SLSA v1 provenance built on GitHub Actions (Sigstore signature, Fulcio identity, Rekor proof, SHA-512 bound to lockfile) | other CI providers → "unsupported"; npm publish attestation not checked; ≤60 per scan |
+| PyPI, Go, crates.io, Maven, NuGet | ✘ | reported as unknown |
+
 ## Intelligence
 | Provider | Ecosystems | Used for |
 |---|---|---|
 | OSV.dev | npm, PyPI, Go, crates.io, Maven, NuGet | matching, details, fixed versions, candidate re-checks |
-| npm registry | npm | dates, versions, maintainers, install scripts, deprecation, provenance/signature presence, dependency ranges |
+| npm registry | npm | dates, versions, maintainers, install scripts, deprecation, provenance attestations (verified with Sigstore), dependency ranges |
 | PyPI JSON API | PyPI | release dates, yanks, project URLs |
 | OpenSSF Scorecard | GitHub-hosted direct deps | repository posture |
 | CISA KEV / FIRST EPSS | any with CVE aliases | known exploitation / probability |

@@ -49,6 +49,9 @@ PROVIDER_HOSTS = {
     "scorecard": "api.securityscorecards.dev",
     "kev": "www.cisa.gov",
     "epss": "api.first.org",
+    # GitHub repository import (public repos only): metadata/commit lookup + archive download
+    "github_api": "api.github.com",
+    "github_archive": "codeload.github.com",
 }
 ALLOWED_HOSTS = frozenset(PROVIDER_HOSTS.values())
 

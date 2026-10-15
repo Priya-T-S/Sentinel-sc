@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, CircleHelp, Search, XCircle } from 'lucide-react'
+import { AlertTriangle, BadgeCheck, CheckCircle2, CircleHelp, Search, ShieldX, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { FindingDetail } from '../components/FindingDetail'
 import { PageHeader } from '../components/Layout'
@@ -49,7 +49,7 @@ export function PackagePage() {
 }
 
 const TRUST_ICON: Record<string, JSX.Element> = {
-  good: <CheckCircle2 size={15} className="text-ok" />, present: <CheckCircle2 size={15} className="text-accent" />, info: <CircleHelp size={15} className="text-ink-400" />,
+  good: <CheckCircle2 size={15} className="text-ok" />, verified: <BadgeCheck size={15} className="text-ok" />, present: <CheckCircle2 size={15} className="text-accent" />, info: <CircleHelp size={15} className="text-ink-400" />,
   warn: <AlertTriangle size={15} className="text-warn" />, absent: <AlertTriangle size={15} className="text-ink-400" />, missing: <XCircle size={15} className="text-bad" />,
   bad: <XCircle size={15} className="text-bad" />, unknown: <CircleHelp size={15} className="text-ink-500" />,
 }
@@ -66,7 +66,7 @@ function PackageDetail({ id }: { id: string }) {
   const unknowns: string[] = []
   if (p.vuln_status !== 'checked') unknowns.push(p.vuln_status_reason || 'Vulnerability status not verified.')
   if (!reg?.available) unknowns.push('Registry metadata was not retrieved (ecosystem not supported for metadata, lookup cap reached, or provider unavailable). Maintenance and provenance signals are unknown — not assumed good or bad.')
-  if (p.trust.items.find((t) => t.key === 'provenance' && t.status !== 'present')) unknowns.push('No verified build provenance: the published artifact cannot be tied to a specific source commit and build.')
+  if (p.trust.items.find((t) => t.key === 'provenance' && t.status !== 'verified')) unknowns.push('No verified build provenance: the published artifact cannot be tied to a specific source commit and build.')
   if (!p.imported_in.length && p.direct) unknowns.push('No import found in scanned source; usage may be dynamic or via tooling.')
   if (!data.paths.length) unknowns.push('No dependency path was established from an application manifest.')
   return (
@@ -101,7 +101,7 @@ function PackageDetail({ id }: { id: string }) {
       </div>
 
       <div className="grid xl:grid-cols-2 gap-4">
-        <Card title="Supply-chain trust profile" subtitle="Each signal shows its source. 'Present' means metadata exists — not that it was cryptographically verified.">
+        <Card title="Supply-chain trust profile" subtitle="Each signal shows its source. 'Verified' = checked cryptographically (Sigstore); 'present' = the metadata exists but was not verified.">
           <ul className="space-y-2.5">
             {p.trust.items.map((t) => (
               <li key={t.key} className="flex gap-2.5">
@@ -135,6 +135,8 @@ function PackageDetail({ id }: { id: string }) {
           ) : <p className="text-sm text-ink-400">Registry metadata is fetched for npm and PyPI packages (bounded per scan). Missing metadata is reported as unknown — never as a risk on its own.</p>}
         </Card>
       </div>
+
+      {p.provenance && p.provenance.status !== 'absent' && <ProvenanceCard pv={p.provenance} name={p.name} version={p.version} />}
 
       <Card title="Explicit uncertainty" subtitle="What SENTINEL-SC could not establish for this package">
         {unknowns.length ? <ul className="list-disc pl-5 text-sm text-ink-300 space-y-1">{unknowns.map((u, i) => <li key={i}>{u}</li>)}</ul> : <p className="text-sm text-ink-400">No major gaps for this package.</p>}
@@ -172,5 +174,32 @@ function PackageDetail({ id }: { id: string }) {
       )}
       <Drawer open={!!open} onClose={() => setOpen(null)} title={<span className="text-sm text-ink-300">Finding detail</span>}>{open && <FindingDetail findingId={open} />}</Drawer>
     </div>
+  )
+}
+
+function ProvenanceCard({ pv, name, version }: { pv: NonNullable<PackageInfo['provenance']>; name: string; version: string | null }) {
+  const ok = pv.status === 'verified'
+  const bad = pv.status === 'invalid' || pv.status === 'repo_mismatch'
+  const commitUrl = pv.repository && pv.commit ? `${pv.repository}/commit/${pv.commit}` : undefined
+  return (
+    <Card title={<span className="flex items-center gap-2">{ok ? <BadgeCheck size={16} className="text-ok" /> : bad ? <ShieldX size={16} className="text-bad" /> : <CircleHelp size={16} className="text-ink-400" />}
+      Build provenance — {ok ? 'cryptographically verified' : bad ? 'FAILED verification' : 'not verified'}</span>}
+      subtitle="SLSA provenance published to npm, checked with Sigstore: signature, signing identity (GitHub Actions), public transparency log, and the artifact's SHA-512.">
+      {(ok || bad) && pv.repository ? (
+        <KeyValue items={[
+          ['Package', <span className="mono">{name}@{version}</span>],
+          ['Built from', <ExtLink href={pv.repository}>{pv.repository}</ExtLink>],
+          ['Commit', <ExtLink href={commitUrl}><span className="mono">{pv.commit}</span></ExtLink>],
+          ['Workflow', <span className="mono text-xs">{pv.workflow} ({pv.ref})</span>],
+          ['Build run', pv.run_url ? <ExtLink href={pv.run_url}>{pv.run_url}</ExtLink> : null],
+          ['Builder', <span className="mono text-xs">{pv.builder}</span>],
+          ['Transparency log', pv.rekor_url ? <ExtLink href={pv.rekor_url}>Rekor entry #{pv.rekor_log_index}</ExtLink> : null],
+          ['Signed at', fmtDate(pv.signed_at)],
+          ['Artifact hash checked against', pv.digest_source === 'lockfile' ? 'your lockfile' : 'registry metadata'],
+          ['Declared repository', pv.declared_repository ?? 'matches'],
+        ]} />
+      ) : null}
+      <div className="mt-3"><Callout tone={ok ? 'ok' : bad ? 'bad' : 'warn'}>{pv.reason}</Callout></div>
+    </Card>
   )
 }

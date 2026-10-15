@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { Layout } from './components/Layout'
+import { AgentsPage } from './pages/Agents'
 import { FindingsPage } from './pages/Findings'
 import { GraphPage } from './pages/Graph'
 import { HistoryPage } from './pages/History'
@@ -24,6 +25,7 @@ function Routes() {
   else if (path.startsWith('/findings')) page = <FindingsPage />
   else if (path.startsWith('/package')) page = <PackagePage />
   else if (path.startsWith('/remediation')) page = <RemediationPage />
+  else if (path.startsWith('/agents')) page = <AgentsPage />
   else if (path.startsWith('/history')) page = <HistoryPage />
   else if (path.startsWith('/settings')) page = <SettingsPage />
   else page = <EmptyState title="Page not found" action={<Link className="btn-primary" to="/">Go to overview</Link>} />
